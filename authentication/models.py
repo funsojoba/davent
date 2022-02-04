@@ -37,7 +37,7 @@ class User(BaseAbstractModel, AbstractBaseUser, PermissionsMixin):
     city = models.CharField(max_length=256)
     state = models.CharField(max_length=256)
     country = models.CharField(max_length=256)
-    user_type = models.CharField(choices=USER_TYPE, max_length=300)
+    user_type = models.CharField(choices=USER_TYPE, max_length=300, default="USER")
 
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
