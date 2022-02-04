@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import dj_database_url
 from pathlib import Path
 from decouple import config
 from datetime import timedelta
@@ -85,16 +86,12 @@ WSGI_APPLICATION = "CORE.wsgi.application"
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": config("DB_NAME", default="postgres"),
-        "USER": config("USER", default="postgres"),
-        "PASSWORD": config("PASSWORD", default="postgres"),
-        "HOST": config("HOST", default="db"),
-        "PORT": config("PORT", default=5432),
-    }
-}
+DATABASE_URL = config(
+    "DATABASE_URL",
+    default="postgres://nwbadcevwqsjen:f91a1eb4d078702f5cdb272831b35c98e88779e7212480fe5a679c18bd9e9381@ec2-18-235-114-62.compute-1.amazonaws.com:5432/d2jv2cgjppp6rs",
+)
+
+DATABASES = {"default": dj_database_url.parse(DATABASE_URL, conn_max_age=0)}
 
 
 # Password validation

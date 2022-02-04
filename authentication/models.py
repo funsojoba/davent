@@ -27,6 +27,8 @@ class UserManager(BaseUserManager):
 
 
 class User(BaseAbstractModel, AbstractBaseUser, PermissionsMixin):
+    USER_TYPE = (("ADMIN", "ADMIN"), ("USER", "USER"))
+
     first_name = models.CharField(max_length=256)
     last_name = models.CharField(max_length=256)
     email = models.EmailField(unique=True)
@@ -35,6 +37,7 @@ class User(BaseAbstractModel, AbstractBaseUser, PermissionsMixin):
     city = models.CharField(max_length=256)
     state = models.CharField(max_length=256)
     country = models.CharField(max_length=256)
+    user_type = models.CharField(choices=USER_TYPE, max_length=300)
 
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
