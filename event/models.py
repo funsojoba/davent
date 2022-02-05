@@ -28,6 +28,12 @@ class Event(BaseAbstractModel):
         related_name="participant",
         verbose_name="event participants",
     )
+    organization = models.ForeignKey(
+        "authentication.User",
+        on_delete=models.CASCADE,
+        related_name="organization",
+        verbose_name="event organization",
+    )
     status = models.CharField(max_length=50, choices=STATUS)
     event_type = models.CharField(max_length=50, choices=TYPE)
     category = models.ForeignKey(EventCategory, on_delete=models.DO_NOTHING)

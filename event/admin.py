@@ -8,5 +8,10 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ("name", "status", "event_type", "start_date", "end_date")
 
 
+class EventCategoryAdmin(admin.ModelAdmin):
+    model = EventCategory
+    list_display = ("name", "owner")
+
+
 admin.site.register(Event, EventAdmin)
-admin.site.register(EventCategory)
+admin.site.register(EventCategory, EventCategoryAdmin)
