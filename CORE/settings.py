@@ -48,7 +48,10 @@ INSTALLED_APPS = [
     "django_celery_beat",
     "django_celery_results",
     "rest_framework_simplejwt",
+    # local apps
     "authentication",
+    "organization",
+    "event",
 ]
 
 MIDDLEWARE = [

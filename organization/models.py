@@ -19,16 +19,14 @@ class Organization(BaseAbstractModel):
     name = models.CharField(max_length=60)
     owner = models.ForeignKey(
         "authentication.User",
-        null=True,
         related_name="user",
         verbose_name="organization owner",
+        on_delete=models.CASCADE,
     )
     description = models.TextField(blank=True, null=True)
     category = models.CharField(choices=ORGANIZATION, max_length=255)
     members = models.ManyToManyField(
         "authentication.User",
-        blank=True,
-        null=True,
         related_name="members",
         verbose_name="organization member",
     )
