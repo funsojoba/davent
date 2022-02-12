@@ -11,7 +11,13 @@ class RegisterUserSerializer(serializers.Serializer):
     state = serializers.CharField(max_length=200)
     country = serializers.CharField(max_length=200)
     password = serializers.CharField(max_length=200)
-    confirm_password = serializers.CharField(max_length=200)
+
+    def validate_email(self, value):
+        user = User.objects.filter(email=value)
+        if user:
+            raise serializers.ValidationError(detail="User with email already exist.")
+        self.user = user.first()
+        return value
 
 
 class LoginUserSerializer(serializers.Serializer):

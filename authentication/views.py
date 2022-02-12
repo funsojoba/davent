@@ -1,3 +1,4 @@
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 
@@ -8,29 +9,19 @@ from .serializers import RegisterUserSerializer, UserSerializer
 from .service import UserService
 
 
-class UserViewSet(viewsets.ViewSet):
-    @action(methods=["post"], url_path="register/admin", detail=True)
-    def create_admin_user(self, request):
-        user = request.user
-        data = request.data
-        serializer = RegisterUserSerializer(data=request.data).data
-
+class AuthViewSet(viewsets.ViewSet):
+    @swagger_auto_schema(
+        method="post",
+        # request_body=schema_examples.EMAIL_REGISTRATION_INPUT,
+        operation_description="Sign up an admin",
+        operation_summary="Sign up an admin",
+        tags=["Auth"],
+        # responses=schema_examples.EMAIL_REGISTRATION_RESPONSES,
+    )
+    @action(detail=False, methods=["post"], url_path="admin-signup")
+    def admin_user_signup(self, request):
+        serializer = RegisterUserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        password = data.get("password")
-        confirm_password = data.get("confirm_password")
-
-        if password != confirm_password:
-            raise ValueError("password and confirm password do not match")
-
-        user = UserService.create_admin_user(
-            first_name=data.get("first_name"),
-            last_name=data.get("last_name"),
-            email=data.get("email"),
-            phone_number=data.get("phone_number"),
-            city=data.get("city"),
-            state=data.get("state"),
-            country=data.get("country"),
-            password=data.get("password"),
-        )
-        return Response(data=UserSerializer(user).data, status=status.HTTP_200_OK)
+        service_response = UserService.create_admin_user(**serializer.data)
+        return Response(data={"user": serializer.data}, status=status.HTTP_201_CREATED)

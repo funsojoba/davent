@@ -2,6 +2,10 @@ from typing import Dict
 from rest_framework.response import Response as DRFResponse
 
 
+class InvalidResponse(Exception):
+    pass
+
+
 class Response:
     def __new__(cls, data=None, errors=None, *args, **kwargs):
         payload = cls.format(data, errors)
