@@ -7,16 +7,16 @@ from helpers.response import Response
 from .serializers import RegisterUserSerializer, UserSerializer
 
 from .service import UserService
+from .docs import schema_example
 
 
 class AuthViewSet(viewsets.ViewSet):
     @swagger_auto_schema(
         method="post",
-        # request_body=schema_examples.EMAIL_REGISTRATION_INPUT,
         operation_description="Sign up an admin",
         operation_summary="Sign up an admin",
         tags=["Auth"],
-        # responses=schema_examples.EMAIL_REGISTRATION_RESPONSES,
+        responses=schema_example.COMPLETE_REGISTRATION_RESPONSES,
     )
     @action(detail=False, methods=["post"], url_path="admin-signup")
     def admin_user_signup(self, request):
@@ -24,4 +24,19 @@ class AuthViewSet(viewsets.ViewSet):
         serializer.is_valid(raise_exception=True)
 
         service_response = UserService.create_admin_user(**serializer.data)
+        return Response(data={"user": serializer.data}, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(
+        method="post",
+        operation_description="Sign up a user",
+        operation_summary="Sign up a user",
+        tags=["Auth"],
+        responses=schema_example.COMPLETE_REGISTRATION_RESPONSES,
+    )
+    @action(detail=False, methods=["post"], url_path="signup")
+    def user_signup(self, request):
+        serializer = RegisterUserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        service_response = UserService.create_viewer_user(**serializer.data)
         return Response(data={"user": serializer.data}, status=status.HTTP_201_CREATED)

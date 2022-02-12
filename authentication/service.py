@@ -8,9 +8,6 @@ class UserService:
     def create_user(cls, **kwargs):
         password = kwargs.get("password")
         user_instance = User.objects.filter(email=kwargs.get("email")).first()
-        print(user_instance)
-        # if user_instance:
-        #     return Response(errors={"email":"user with this email already exist"})
         user = User.objects.create(**kwargs)
         user.set_password(password)
         user.save()

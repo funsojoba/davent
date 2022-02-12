@@ -5,5 +5,5 @@ from rest_framework.routers import DefaultRouter
 router = DefaultRouter(trailing_slash=False)
 
 
-router.register("auth", AuthViewSet, basename="auth")
+router.register("", AuthViewSet, basename="auth")
 urlpatterns = router.urls
