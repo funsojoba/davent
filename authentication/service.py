@@ -1,5 +1,6 @@
 from authentication.models import User
 from helpers.response import Response
+from helpers.generate_otp import get_otp
 from .serializers import UserSerializer
 
 
@@ -41,6 +42,7 @@ class UserService:
             password=kwargs.get("password"),
             user_type="USER",
         )
+        
         return user
 
     @classmethod

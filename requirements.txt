@@ -1,3 +1,4 @@
+django-redis==5.2.0
 amqp==5.0.9
 asgiref==3.5.0
 billiard==3.6.4.0
