@@ -42,7 +42,7 @@ class UserService:
             password=kwargs.get("password"),
             user_type="USER",
         )
-        
+
         return user
 
     @classmethod
@@ -60,3 +60,7 @@ class UserService:
     def update_user(cls, user, **kwargs):
         user = User(**kwargs)
         user.save()
+
+    @classmethod
+    def verify_user(cls, user):
+        pass
