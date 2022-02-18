@@ -1,48 +1,44 @@
 from authentication.models import User
 from helpers.response import Response
 from helpers.generate_otp import get_otp
+from helpers.cache_manager import CacheManager
 from .serializers import UserSerializer
 
 
 class UserService:
     @classmethod
-    def create_user(cls, **kwargs):
+    def _create_user(cls, user_type, **kwargs):
+        otp = get_otp()
         password = kwargs.get("password")
-        user_instance = User.objects.filter(email=kwargs.get("email")).first()
-        user = User.objects.create(**kwargs)
-        user.set_password(password)
-        user.save()
-        return user
 
-    @classmethod
-    def create_admin_user(cls, **kwargs):
-        user = cls.create_user(
+        user = User.objects.create(
             first_name=kwargs.get("first_name"),
             last_name=kwargs.get("last_name"),
-            email=kwargs.get("email"),
             phone_number=kwargs.get("phone_number"),
+            email=kwargs.get("email"),
+            avatar=kwargs.get("avatar", ""),
             city=kwargs.get("city"),
             state=kwargs.get("state"),
             country=kwargs.get("country"),
-            password=kwargs.get("password"),
-            user_type="ADMIN",
+            user_type=user_type,
         )
+        user.set_password(password)
+        user.save()
+        CacheManager.set_key(
+            f"user:otp:{otp}",
+            {"token": otp},
+            86400,
+        )
+        return UserSerializer(instance=user).data
+
+    @classmethod
+    def create_admin_user(cls, **kwargs):
+        user = cls._create_user("ADMIN", **kwargs)
         return user
 
     @classmethod
     def create_viewer_user(cls, **kwargs):
-        user = cls.create_user(
-            first_name=kwargs.get("first_name"),
-            last_name=kwargs.get("last_name"),
-            email=kwargs.get("email"),
-            phone_number=kwargs.get("phone_number"),
-            city=kwargs.get("city"),
-            state=kwargs.get("state"),
-            country=kwargs.get("country"),
-            password=kwargs.get("password"),
-            user_type="USER",
-        )
-
+        user = cls._create_user("USER", **kwargs)
         return user
 
     @classmethod
@@ -64,3 +60,7 @@ class UserService:
     @classmethod
     def verify_user(cls, user):
         pass
+
+    @classmethod
+    def get_user(cls, **kwargs):
+        return User.objects.filter(**kwargs).first()

@@ -24,7 +24,7 @@ class AuthViewSet(viewsets.ViewSet):
         serializer.is_valid(raise_exception=True)
 
         service_response = UserService.create_admin_user(**serializer.data)
-        return Response(data={"user": serializer.data}, status=status.HTTP_201_CREATED)
+        return Response(data=service_response, status=status.HTTP_201_CREATED)
 
     @swagger_auto_schema(
         method="post",
@@ -37,6 +37,6 @@ class AuthViewSet(viewsets.ViewSet):
     def user_signup(self, request):
         serializer = RegisterUserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-
         service_response = UserService.create_viewer_user(**serializer.data)
-        return Response(data={"user": serializer.data}, status=status.HTTP_201_CREATED)
+
+        return Response(data=service_response, status=status.HTTP_201_CREATED)

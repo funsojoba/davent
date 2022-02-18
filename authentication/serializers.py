@@ -26,18 +26,19 @@ class LoginUserSerializer(serializers.Serializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    model = User
-    fields = (
-        "first_name",
-        "last_name",
-        "email",
-        "phone_number",
-        "city",
-        "state",
-        "country",
-        "user_type",
-        "avatar",
-    )
+    class Meta:
+        model = User
+        fields = (
+            "first_name",
+            "last_name",
+            "email",
+            "phone_number",
+            "city",
+            "state",
+            "country",
+            "user_type",
+            "avatar",
+        )
 
 
 class VerifyAccountSerializer(serializers.Serializer):

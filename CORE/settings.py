@@ -30,7 +30,8 @@ SECRET_KEY = os.environ.get(
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = int(os.environ.get("DEBUG", default=1))
+# DEBUG = int(os.environ.get("DEBUG", default=1))
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -155,10 +156,11 @@ REST_FRAMEWORK = {
 }
 
 
+REDIS_CONNECTION_URL = config("REDIS_URL", default="redis://redis:6379/0")
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": config("REDIS_URL"),
+        "LOCATION": REDIS_CONNECTION_URL,
         "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
     }
 }
@@ -214,3 +216,5 @@ CELERY_BROKER_URL = config("REDIS_URL", default="redis://redis:6379/0")
 CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND", default="redis://redis:6379/0")
 CELERY_MAX_RETRY = ""
 CELERY_RETRY_DELAY = ""
+
+ENVIRONMENT = config("ENVIRONMENT")
