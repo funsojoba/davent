@@ -52,4 +52,9 @@ class ForgotPasswordSerializer(serializers.Serializer):
 
 class ResetPasswordSerializer(serializers.Serializer):
     password = serializers.CharField()
-    confirm_password = serializers.CharField()
+    email = serializers.EmailField()
+
+
+class VerifyResetPassword(serializers.Serializer):
+    code = serializers.CharField()
+    email = serializers.EmailField()

@@ -1,9 +1,14 @@
+import uuid
+from django.conf import settings
 from authentication.models import User
+
 from helpers.response import Response
 from helpers.generate_otp import get_otp
 from helpers.cache_manager import CacheManager
-from .serializers import UserSerializer
+
 from notification.service import EmailService
+
+from .serializers import UserSerializer
 
 
 class UserService:
@@ -65,18 +70,58 @@ class UserService:
         user.save()
 
     @classmethod
+    def get_user(cls, **kwargs):
+        return User.objects.filter(**kwargs).first()
+
+    @classmethod
     def verify_user(cls, otp, email):
         otp = CacheManager.retrieve_key(f"user:otp:{otp}")
         if otp and otp.get("email") == email:
             CacheManager.delete_key(
                 f"user:otp:{otp}"
             )  # TODO: delete key is not working for now
-            user = User.objects.filter(email=email).first()
+            user = cls.get_user(email=email).first()
             user.is_active = True
             user.save()
             return True
         return False
 
     @classmethod
-    def get_user(cls, **kwargs):
-        return User.objects.filter(**kwargs).first()
+    def forogt_password(cls, email):
+        user = cls.get_user(email=email)
+
+        if user:
+            code = uuid.uuid4().hex
+            verification_link = (
+                f"{settings.BASE_URL}/verify-user?code={code}&email={email}"
+            )
+            CacheManager.set_key(
+                f"user:reset_password:{code}",
+                {"email": user.email},
+                86400,
+            )
+            EmailService.send_async(
+                "forgot_password.html",
+                "Forgot Password",
+                [email],
+                {
+                    "first_name": user.first_name.capitalize(),
+                    "verification_link": verification_link,
+                },
+            )
+            return True
+        return False
+
+    @classmethod
+    def verify_reset_pssword(cls, code, email):
+        code = CacheManager.retrieve_key(f"user:reset_password:{code}")
+        if code and code.get("email") == email:
+            CacheManager.delete_key(f"user:reset_password:{code}")
+            return True
+        return False
+
+    @classmethod
+    def reset_password(cls, password, email):
+        user = cls.get_user()
+        password = cls.set_user_password(user, password)
+        return True

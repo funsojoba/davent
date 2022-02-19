@@ -4,7 +4,15 @@ from rest_framework.decorators import action
 
 from helpers.permissions import IsAdminUser, IsUser
 from helpers.response import Response
-from .serializers import RegisterUserSerializer, UserSerializer, VerifyAccountSerializer
+from .serializers import (
+    RegisterUserSerializer,
+    UserSerializer,
+    VerifyAccountSerializer,
+    ForgotPasswordSerializer,
+    VerifyResetPassword,
+    UserSerializer,
+    ResetPasswordSerializer,
+)
 
 from .service import UserService
 from .docs import schema_example
@@ -55,3 +63,55 @@ class AuthViewSet(viewsets.ViewSet):
         if service_response:
             return Response(data={"VERIFIED": True})
         return Response(errors={"VERIFIED": False})
+
+    @swagger_auto_schema(
+        operation_description="Forgot Password",
+        operation_summary="Forgot Password",
+        tags=["Auth"],
+        responses=schema_example.COMPLETE_REGISTRATION_RESPONSES,
+        request=ForgotPasswordSerializer,
+    )
+    @action(detail=False, methods=["post"], url_path="forgot-password")
+    def forgot_password(self, request):
+        serializer = ForgotPasswordSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        service_response = UserService.forogt_password(serializer.data.get("email"))
+        if service_response:
+            return Response(data={"email": "reset password sent to mail"})
+        return Response(errors={"error": "User with this email does not exist"})
+
+    @swagger_auto_schema(
+        operation_description="Verify Forgot Password",
+        operation_summary="Verify Forgot Password",
+        tags=["Auth"],
+        responses=schema_example.COMPLETE_REGISTRATION_RESPONSES,
+        request=ForgotPasswordSerializer,
+    )
+    @action(detail=False, methods=["post"], url_path="verify-forgot-password")
+    def verify_forgot_password(self, request):
+        serializer = VerifyResetPassword(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        service_response = UserService.verify_reset_pssword(
+            serializer.data.get("code"), serializer.data.get("email")
+        )
+        if service_response:
+            return Response(data={"VERIFIED": True})
+        return Response(errors={"VERIFIED": False})
+
+    @swagger_auto_schema(
+        operation_description="Reset Password",
+        operation_summary="Reset Password",
+        tags=["Auth"],
+        responses=schema_example.COMPLETE_REGISTRATION_RESPONSES,
+        request=ForgotPasswordSerializer,
+    )
+    @action(detail=False, methods=["post"], url_path="reset-password")
+    def verify_forgot_password(self, request):
+        serializer = ResetPasswordSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        service_response = UserService.reset_password(
+            serializer.data.get("password"), serializer.data.get("email")
+        )
+        if service_response:
+            return Response(data={"PASSWORD_RESET": True})
+        return Response(errors={"PASSWORD_RESET": False})
