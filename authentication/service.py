@@ -3,6 +3,7 @@ from helpers.response import Response
 from helpers.generate_otp import get_otp
 from helpers.cache_manager import CacheManager
 from .serializers import UserSerializer
+from notification.service import EmailService
 
 
 class UserService:
@@ -26,8 +27,14 @@ class UserService:
         user.save()
         CacheManager.set_key(
             f"user:otp:{otp}",
-            {"token": otp},
+            {"email": user.email},
             86400,
+        )
+        EmailService.send_async(
+            "complete_signup.html",
+            "Verify Account",
+            [user.email],
+            {"first_name": user.first_name, "otp": otp},
         )
         return UserSerializer(instance=user).data
 
@@ -58,8 +65,17 @@ class UserService:
         user.save()
 
     @classmethod
-    def verify_user(cls, user):
-        pass
+    def verify_user(cls, otp, email):
+        otp = CacheManager.retrieve_key(f"user:otp:{otp}")
+        if otp and otp.get("email") == email:
+            CacheManager.delete_key(
+                f"user:otp:{otp}"
+            )  # TODO: delete key is not working for now
+            user = User.objects.filter(email=email).first()
+            user.is_active = True
+            user.save()
+            return True
+        return False
 
     @classmethod
     def get_user(cls, **kwargs):

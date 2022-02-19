@@ -1,6 +1,6 @@
 import smtplib
 from celery import shared_task
-from notification.utils import EmailMessage
+from notification.utils import EmailManager
 
 
 @shared_task(
@@ -8,7 +8,7 @@ from notification.utils import EmailMessage
     autoretry_for=(smtplib.SMTPException,),
 )
 def send_mail_async(self, template, subject, recipients, context):
-    mail = EmailMessage(
-        subject=subject, template=template, recipients=recipients, context=context
+    mail = EmailManager(
+        template=template, subject=subject, recipients=recipients, context=context
     )
     mail.send()
