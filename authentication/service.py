@@ -1,10 +1,13 @@
 import uuid
 from django.conf import settings
+from django.contrib.auth.hashers import check_password
+
 from authentication.models import User
 
 from helpers.response import Response
 from helpers.generate_otp import get_otp
 from helpers.cache_manager import CacheManager
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from notification.service import EmailService
 
@@ -125,3 +128,21 @@ class UserService:
         user = cls.get_user()
         password = cls.set_user_password(user, password)
         return True
+
+    @classmethod
+    def login_user(cls, email, password):
+        user = cls.get_user(email=email)
+
+        if user:
+            user_password = check_password(password, user.password)
+
+            if not user_password:
+                return Response(errors={"error": "incorrect password"})
+
+            token = RefreshToken.for_user(user)
+            data = {
+                "user": UserSerializer(instance=user).data,
+                "token": {"refresh": str(token), "access": str(token.access_token)},
+            }
+            return Response(data=data)
+        return Response(errors={"error": "User does not exist"})

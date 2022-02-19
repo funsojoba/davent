@@ -12,6 +12,7 @@ from .serializers import (
     VerifyResetPassword,
     UserSerializer,
     ResetPasswordSerializer,
+    LoginUserSerializer,
 )
 
 from .service import UserService
@@ -69,7 +70,7 @@ class AuthViewSet(viewsets.ViewSet):
         operation_summary="Forgot Password",
         tags=["Auth"],
         responses=schema_example.COMPLETE_REGISTRATION_RESPONSES,
-        request=ForgotPasswordSerializer,
+        request_body=ForgotPasswordSerializer,
     )
     @action(detail=False, methods=["post"], url_path="forgot-password")
     def forgot_password(self, request):
@@ -115,3 +116,19 @@ class AuthViewSet(viewsets.ViewSet):
         if service_response:
             return Response(data={"PASSWORD_RESET": True})
         return Response(errors={"PASSWORD_RESET": False})
+
+    @swagger_auto_schema(
+        operation_description="Login User",
+        operation_summary="Login User",
+        tags=["Auth"],
+        responses=schema_example.COMPLETE_REGISTRATION_RESPONSES,
+        request_body=LoginUserSerializer,
+    )
+    @action(detail=False, methods=["post"], url_path="login")
+    def verify_forgot_password(self, request):
+        serializer = LoginUserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        service_response = UserService.login_user(
+            serializer.data.get("email"), serializer.data.get("password")
+        )
+        return service_response
