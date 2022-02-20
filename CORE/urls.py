@@ -44,4 +44,5 @@ urlpatterns = [
         name="schema-swagger-ui",
     ),
     path("auth/", include("authentication.urls")),
+    path("organization/", include("organization.urls")),
 ]

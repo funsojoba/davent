@@ -27,6 +27,7 @@ class Event(BaseAbstractModel):
         "authentication.User",
         related_name="participant",
         verbose_name="event participants",
+        blank=True,
     )
     organization = models.ForeignKey(
         "authentication.User",

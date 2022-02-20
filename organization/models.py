@@ -29,6 +29,7 @@ class Organization(BaseAbstractModel):
         "authentication.User",
         related_name="members",
         verbose_name="organization member",
+        blank=True,
     )
 
     def __str__(self):
