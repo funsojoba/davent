@@ -2,7 +2,7 @@ import uuid
 from django.conf import settings
 from django.contrib.auth.hashers import check_password
 
-from authentication.models import User
+from .models import User
 
 from helpers.response import Response
 from helpers.generate_otp import get_otp

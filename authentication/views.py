@@ -107,7 +107,7 @@ class AuthViewSet(viewsets.ViewSet):
         request=ForgotPasswordSerializer,
     )
     @action(detail=False, methods=["post"], url_path="reset-password")
-    def verify_forgot_password(self, request):
+    def reset_password(self, request):
         serializer = ResetPasswordSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         service_response = UserService.reset_password(
@@ -132,3 +132,21 @@ class AuthViewSet(viewsets.ViewSet):
             serializer.data.get("email"), serializer.data.get("password")
         )
         return service_response
+
+
+class UserViewset(viewsets.ViewSet):
+    permission_classes = [IsAdminUser | IsUser]
+
+    @swagger_auto_schema(
+        operation_description="User detail",
+        operation_summary="User detail",
+        tags=["User"],
+        # responses=schema_example.COMPLETE_REGISTRATION_RESPONSES,
+    )
+    @action(detail=False, methods=["get"], url_path="me")
+    def get_user_profile(self, request):
+        user = request.user
+        service_response = UserService.get_user(email=user.email)
+        serializer = UserSerializer(service_response)
+        print(serializer.data)
+        return Response(data=serializer.data)
