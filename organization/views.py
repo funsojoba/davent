@@ -38,4 +38,14 @@ class OrganizationViewSet(viewsets.ViewSet):
         service_response = OrganizationService.create_organization(
             request.user, **serializer.data
         )
-        return Response(data=service_response)
+        return service_response
+
+    @swagger_auto_schema(
+        operation_description="Retrieve Organization",
+        operation_summary="Retrieve Organization",
+        tags=["Organization"],
+        # responses=schema_example.COMPLETE_REGISTRATION_RESPONSES,
+    )
+    def retrieve(self, request, pk=None):
+        service_response = OrganizationService.get_organization(pk)
+        return Response(OrganizationSerializer(service_response).data)
