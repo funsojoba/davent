@@ -1,5 +1,6 @@
 from django.db import models
 from helpers.db_helper import BaseAbstractModel
+from organization.models import Organization
 
 
 class EventCategory(BaseAbstractModel):
@@ -30,7 +31,7 @@ class Event(BaseAbstractModel):
         blank=True,
     )
     organization = models.ForeignKey(
-        "authentication.User",
+        Organization,
         on_delete=models.CASCADE,
         related_name="organization",
         verbose_name="event organization",
