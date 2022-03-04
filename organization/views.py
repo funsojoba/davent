@@ -49,3 +49,18 @@ class OrganizationViewSet(viewsets.ViewSet):
     def retrieve(self, request, pk=None):
         service_response = OrganizationService.get_organization(pk)
         return Response(OrganizationSerializer(service_response).data)
+
+
+    @swagger_auto_schema(
+        operation_description="Update Organization Information",
+        operation_summary="Update Organization Information", 
+        tags=["Organization"]
+    )
+    def update(self, request, pk=None):
+        service_response = OrganizationService.update_organization(pk)
+        serializer = self.serializer_class(service_response, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data={"message": "success"}, status=status.HTTP_200_OK)
+            
+        return Response(errors={"message": "Failure"}, status=status.HTTP_400_BAD_REQUEST)

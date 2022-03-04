@@ -25,9 +25,19 @@ class OrganizationService:
         return Response(data=OrganizationSerializer(instance=organization).data)
 
     @classmethod
-    def get_organization(cls, id):
-        return Organization.objects.filter(id=id).first()
+    def get_organization(cls, **kwargs):
+        return Organization.objects.filter(**kwargs).first()
 
     @classmethod
     def list_organization(cls, **kwargs):
         return Organization.objects.filter(**kwargs)
+    
+    @classmethod
+    def update_organization(cls, organization_id, **kwargs):
+        organization = Organization.objects.filter(id=organization_id).first()
+        organization.name =kwargs.get("name", "")
+        organization.description=kwargs.get("description", "")
+        organization.category=kwargs.get("category", "")
+        organization.save()
+        return organization
+        

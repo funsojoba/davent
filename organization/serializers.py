@@ -12,3 +12,8 @@ class CreateOrganizationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization
         fields = ("name", "description", "category")
+
+class UpdateOrganizationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Organization
+        fields = ("name", "description", "category")

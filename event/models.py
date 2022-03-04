@@ -18,6 +18,7 @@ class EventCategory(BaseAbstractModel):
 class Event(BaseAbstractModel):
     STATUS = (("ACTIVE", "ACTIVE"), ("EXPIRED", "EXPIRED"))
     TYPE = (("FREE", "FREE"), ("PAID", "PAID"))
+    LOCATION = (("ONLINE", "ONLINE"), ("ONSITE", "ONSITE"))
 
     name = models.CharField(max_length=255)
     description = models.TextField()
@@ -41,6 +42,8 @@ class Event(BaseAbstractModel):
     category = models.ForeignKey(EventCategory, on_delete=models.DO_NOTHING)
     event_banner = models.URLField(blank=True, null=True)
     event_dp = models.URLField(blank=True, null=True)
+    location = models.CharField(max_length=50, choices=LOCATION)
+    address = models.CharField(max_length=250, blank=True, null=True)
 
     def __str__(self):
         return self.name
