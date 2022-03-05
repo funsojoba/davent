@@ -20,7 +20,6 @@ class OrganizationViewSet(viewsets.ViewSet):
     )
     @action(detail=False, methods=["get"], url_path="list")
     def list_organization(self, request):
-        print(request.user.user_type)
         service_response = OrganizationService.list_organization(owner=request.user)
         serializer = OrganizationSerializer(service_response, many=True)
         return Response(data=dict(data=serializer.data))

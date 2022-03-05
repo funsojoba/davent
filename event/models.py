@@ -44,6 +44,6 @@ class Event(BaseAbstractModel):
     event_dp = models.URLField(blank=True, null=True)
     location = models.CharField(max_length=50, choices=LOCATION)
     address = models.CharField(max_length=250, blank=True, null=True)
-
+    # TODO: find a way to capture location, maybe some geolocation stuffs
     def __str__(self):
         return self.name

@@ -33,4 +33,8 @@ class EventService:
             location=kwargs.get("location"),
             address=kwargs.get("address", "")
         )
+        
+    @classmethod
+    def get_events(cls, **kwargs):
+        return Event.objects.filter(**kwargs)
 
