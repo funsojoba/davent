@@ -5,7 +5,7 @@ from authentication.models import User
 
 class UserAdmin(admin.ModelAdmin):
     model = User
-    list_display = ("first_name", "last_name", "email", "created_at")
+    list_display = ("first_name", "last_name", "email", "user_type", "is_active", "created_at")
     ordering = ("-created_at",)
 
     # def has_change_permission(self, request, obj=None):

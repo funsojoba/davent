@@ -19,6 +19,7 @@ class EventCategoryService:
     @classmethod
     def create_event_category(cls, user, **kwargs):
         return EventCategory.objects.create(owner=user, name=kwargs.get("name"))
+
 class EventService:
     @classmethod
     def create_event(cls, user, **kwargs):
@@ -44,6 +45,11 @@ class EventService:
     @classmethod
     def get_events(cls, **kwargs):
         return Event.objects.filter(**kwargs)
+    
+    @classmethod
+    def get_event_participants(cls, user):
+        event = Event.objects.filter(owner=user).first()
+        return event.participant.all()
 
     @classmethod
     def register_event(cls, user, event_id):

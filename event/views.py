@@ -7,6 +7,7 @@ from helpers.response import Response
 
 from .service import EventService, EventCategoryService
 from . import serializers
+from authentication.serializers import UserSerializer
 
 
 class UserEventViewSet(viewsets.ViewSet):
@@ -46,10 +47,20 @@ class AdminEventViewSet(viewsets.ViewSet):
         serializer = serializers.CreateEventSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(errors=serializer.errors)
-        
+
         service_response = EventService.create_event(
             request.user, **serializer.data)
         return Response(data=dict(event=serializers.GetEventCategorySerializer(service_response).data))
+
+    @swagger_auto_schema(
+        operation_description="Get all event participants",
+        operation_summary="Get all event participants",
+        tags=["Event"],
+    )
+    @action(detail=False, methods=['get'], url_path='participants')
+    def get_all_event_participants(self, request):
+        participants = EventService.get_event_participants(user=request.user)
+        return Response(data=dict(participants=UserSerializer(participants, many=True).data))
 
 
 class EventCategoryViewSet(viewsets.ViewSet):
