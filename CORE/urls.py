@@ -45,4 +45,5 @@ urlpatterns = [
     ),
     path("auth/", include("authentication.urls")),
     path("organization/", include("organization.urls")),
+    path("event/", include("event.urls"))
 ]
