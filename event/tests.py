@@ -1,3 +1,5 @@
-from django.test import TestCase
+import pytest
 
-# Create your tests here.
+
+def test_sum():
+    assert 2 + 2 == 4
