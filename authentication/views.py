@@ -142,12 +142,11 @@ class UserViewset(viewsets.ViewSet):
         operation_description="User detail",
         operation_summary="User detail",
         tags=["User"],
-        # responses=schema_example.COMPLETE_REGISTRATION_RESPONSES,
+        responses=schema_example.GET_USER_DATA,
     )
     @action(detail=False, methods=["get"], url_path="me")
     def get_user_profile(self, request):
         user = request.user
         service_response = UserService.get_user(email=user.email)
         serializer = UserSerializer(service_response)
-        print(serializer.data)
         return Response(data=serializer.data)
