@@ -25,8 +25,9 @@ class AuthViewSet(viewsets.ViewSet):
         operation_summary="Sign up an admin",
         tags=["Auth"],
         responses=schema_example.COMPLETE_REGISTRATION_RESPONSES,
+        request_body=RegisterUserSerializer,
     )
-    @action(detail=False, methods=["post"], url_path="admin-signup")
+    @action(detail=False, methods=["post"], url_path="admin/signup")
     def admin_user_signup(self, request):
         serializer = RegisterUserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

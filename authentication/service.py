@@ -39,10 +39,10 @@ class UserService:
             86400,
         )
         EmailService.send_async(
-            "complete_signup.html",
-            "Verify Account",
-            [user.email],
-            {"first_name": user.first_name, "otp": otp},
+            template="complete_signup.html",
+            subject="Verify Account",
+            recipients=[user.email],
+            context={"first_name": user.first_name, "otp": otp},
         )
         return UserSerializer(instance=user).data
 

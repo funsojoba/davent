@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
@@ -12,15 +12,13 @@ class EmailManager:
         self.recipients = recipients
 
     def _compose_message(self):
-        html_content = render_to_string(self.template, self.context)
-        text_content = strip_tags(html_content)
-        message = EmailMultiAlternatives(
-            self.subject,
-            text_content,
-            settings.EMAIL_FROM,
-            self.recipients,
+        message = EmailMessage(
+            subject=self.subject,
+            body=render_to_string(self.template, self.context),
+            from_email="support@davent.com",
+            to=self.recipients,
         )
-        message.attach_alternative(html_content, "text/html")
+        message.content_subtype = "html"
         return message
 
     def send(self):
