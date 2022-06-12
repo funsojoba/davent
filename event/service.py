@@ -82,3 +82,10 @@ class EventService:
                 user = UserService.get_user(id=user_id)
                 event.participant.add(user)
         return event
+
+    @classmethod
+    def admin_set_event_status(cls, event_id, status):
+        event = cls.get_single_event(id=event_id)
+        event.status = status
+        event.save()
+        return event

@@ -66,3 +66,7 @@ class GetEventCategorySerializer(serializers.ModelSerializer):
 
 class AdminRegisterUserSerializer(serializers.Serializer):
     user_ids = serializers.ListField(child=serializers.CharField())
+
+
+class AdminSetEventStatusSerializer(serializers.Serializer):
+    status = serializers.ChoiceField(choices=Event.STATUS)

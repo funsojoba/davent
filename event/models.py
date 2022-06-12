@@ -16,7 +16,7 @@ class EventCategory(BaseAbstractModel):
 
 
 class Event(BaseAbstractModel):
-    STATUS = (("ACTIVE", "ACTIVE"), ("EXPIRED", "EXPIRED"))
+    STATUS = (("ACTIVE", "ACTIVE"), ("EXPIRED", "EXPIRED"), ("SCHEDULED", "SCHEDULED"))
     TYPE = (("FREE", "FREE"), ("PAID", "PAID"))
     LOCATION = (("ONLINE", "ONLINE"), ("ONSITE", "ONSITE"))
 

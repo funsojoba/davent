@@ -113,6 +113,27 @@ class AdminEventViewSet(viewsets.ViewSet):
             data=dict(participants=serializers.GetEventSerializer(participants).data)
         )
 
+    @swagger_auto_schema(
+        operation_description="Set event status",
+        operation_summary="Set event status",
+        tags=["Event-Admin"],
+    )
+    @action(detail=False, methods=["post"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/status")
+    def register_event(self, request, pk):
+
+        serializer = serializers.AdminSetEventStatusSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(
+                errors=serializer.errors, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        service_response = EventService.admin_set_event_status(
+            pk, serializer.data.get("status")
+        )
+        return Response(
+            data=dict(event=serializers.GetEventSerializer(service_response).data)
+        )
+
 
 class EventCategoryViewSet(viewsets.ViewSet):
     permission_classes = (IsAdminUser,)
