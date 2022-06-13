@@ -134,6 +134,22 @@ class AdminEventViewSet(viewsets.ViewSet):
             data=dict(event=serializers.GetEventSerializer(service_response).data)
         )
 
+    @swagger_auto_schema(
+        operation_description="Update event",
+        operation_summary="Update event",
+        tags=["Event-Admin"],
+    )
+    def partial_update(self, request, pk=None):
+        serializer = serializers.UodateEventSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        service_response = EventService.update_event(
+            event_id=pk, owner=request.user, **serializer.data
+        )
+        return Response(
+            data=dict(event=serializers.GetEventSerializer(service_response).data)
+        )
+
 
 class EventCategoryViewSet(viewsets.ViewSet):
     permission_classes = (IsAdminUser,)

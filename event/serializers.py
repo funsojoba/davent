@@ -70,3 +70,16 @@ class AdminRegisterUserSerializer(serializers.Serializer):
 
 class AdminSetEventStatusSerializer(serializers.Serializer):
     status = serializers.ChoiceField(choices=Event.STATUS)
+
+
+class UodateEventSerializer(serializers.Serializer):
+    name = serializers.CharField(required=False)
+    description = serializers.CharField(required=False)
+    start_date = serializers.CharField(required=False)
+    end_date = serializers.CharField(required=False)
+    event_type = serializers.CharField(required=False)
+    category = serializers.CharField(required=False)
+    event_banner = serializers.CharField(required=False)
+    event_dp = serializers.CharField(required=False)
+    location = serializers.CharField(required=False)
+    address = serializers.CharField(required=False)

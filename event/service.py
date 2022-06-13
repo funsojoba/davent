@@ -4,7 +4,7 @@ from rest_framework import status
 from helpers.response import Response
 from helpers.permissions import IsAdminUser, IsUser
 
-from .models import Event, EventCategory
+from .models import Event, EventCategory, Ticket, CheckIn
 from . import serializers
 from organization.service import OrganizationService
 from authentication.service import UserService
@@ -60,10 +60,15 @@ class EventService:
         return event.participant.all()
 
     @classmethod
+    def generate_event_ticket(cls, event, user):
+        pass
+
+    @classmethod
     def register_event(cls, user, event_id):
         event = Event.objects.filter(id=event_id).first()
         event.participant.add(user)
         event.save()
+
         return event
 
     @classmethod
@@ -89,3 +94,33 @@ class EventService:
         event.status = status
         event.save()
         return event
+
+    @classmethod
+    def update_event(cls, event_id, owner, **kwargs):
+        event = cls.get_single_event(id=event_id, owner=owner)
+
+        # TODO: this kinda looks redundant though
+        event.name = kwargs.get("name") or event.name
+        event.description = kwargs.get("description") or event.description
+        event.start_date = kwargs.get("start_date") or event.start_date
+        event.end_date = kwargs.get("end_date") or event.end_date
+        event.event_type = kwargs.get("event_type") or event.event_type
+        event.category = (
+            EventCategoryService.get_event_category(
+                user=owner, id=kwargs.get("category")
+            )
+            or event.category
+        )
+        event.event_banner = kwargs.get("event_banner") or event.event_banner
+        event.event_dp = kwargs.get("event_dp") or event.event_dp
+        event.location = kwargs.get("location") or event.location
+        event.address = kwargs.get("address") or event.address
+
+        event.save()
+        return event
+
+
+class CheckInService:
+    @classmethod
+    def check_in(cls, event, user):
+        check_in = CheckIn.object.create(event=event, user=user)

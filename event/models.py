@@ -1,6 +1,16 @@
+import string
+import random
+
 from django.db import models
+
 from helpers.db_helper import BaseAbstractModel
 from organization.models import Organization
+
+
+def get_ticket_id():
+    string_chr = string.ascii_uppercase + string.digits
+    ticket_id = "".join(random.choices(string.digits, k=8))
+    return ticket_id
 
 
 class EventCategory(BaseAbstractModel):
@@ -47,3 +57,17 @@ class Event(BaseAbstractModel):
     # TODO: find a way to capture location, maybe some geolocation stuffs
     def __str__(self):
         return self.name
+
+
+class Ticket(BaseAbstractModel):
+    STATUS = (("ACTIVE", "ACTIVE"), ("EXPIRED", "EXPIRED"))
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="ticket")
+    owner = models.ForeignKey("authentication.User", on_delete=models.CASCADE)
+    ticket_id = models.CharField(max_length=10, default=get_ticket_id)
+    status = models.CharField(choices=STATUS, max_length=20)
+    expiry_date = models.DateTimeField()
+
+
+class CheckIn(BaseAbstractModel):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    user = models.ForeignKey("authentication.User", on_delete=models.DO_NOTHING)
