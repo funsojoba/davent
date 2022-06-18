@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "authentication",
     "organization",
     "event",
+    "payment",
 ]
 
 MIDDLEWARE = [
@@ -220,3 +221,5 @@ CELERY_RETRY_DELAY = ""
 ENVIRONMENT = config("ENVIRONMENT")
 
 BASE_URL = config("BASE_URL")
+
+PAYSTACK_SECRET_KEY = config("PAYSTACK_SECRET_KEY")
