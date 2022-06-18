@@ -5,6 +5,8 @@ from helpers.permissions import IsAdminUser, IsUser
 from .models import Organization
 from .serializers import OrganizationSerializer
 
+from event.service import EventService
+
 
 class OrganizationService:
     @classmethod
@@ -31,13 +33,17 @@ class OrganizationService:
     @classmethod
     def list_organization(cls, **kwargs):
         return Organization.objects.filter(**kwargs)
-    
+
     @classmethod
     def update_organization(cls, organization_id, **kwargs):
         organization = Organization.objects.filter(id=organization_id).first()
-        organization.name =kwargs.get("name", "")
-        organization.description=kwargs.get("description", "")
-        organization.category=kwargs.get("category", "")
+        organization.name = kwargs.get("name", "")
+        organization.description = kwargs.get("description", "")
+        organization.category = kwargs.get("category", "")
         organization.save()
         return organization
-        
+
+    @classmethod
+    def get_events_by_organization(cls, org_id):
+        organization = cls.get_organization(id=org_id)
+        return EventService.get_events(organization=organization)

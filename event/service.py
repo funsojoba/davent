@@ -6,7 +6,7 @@ from helpers.permissions import IsAdminUser, IsUser
 
 from .models import Event, EventCategory, Ticket, CheckIn
 from . import serializers
-from organization.service import OrganizationService
+
 from authentication.service import UserService
 
 
@@ -27,6 +27,8 @@ class EventCategoryService:
 class EventService:
     @classmethod
     def create_event(cls, user, **kwargs):
+        from organization.service import OrganizationService
+
         event_category = EventCategoryService.get_event_category(
             user=user, id=kwargs.get("category")
         )
