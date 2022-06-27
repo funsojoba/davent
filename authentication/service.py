@@ -125,7 +125,7 @@ class UserService:
 
     @classmethod
     def reset_password(cls, password, email):
-        user = cls.get_user()
+        user = cls.get_user(email=email)
         password = cls.set_user_password(user, password)
         return True
 
@@ -146,3 +146,7 @@ class UserService:
             }
             return Response(data=data)
         return Response(errors={"error": "User does not exist"})
+
+    @classmethod
+    def get_all_users(cls):
+        return User.objects.all()

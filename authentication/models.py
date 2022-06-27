@@ -27,7 +27,7 @@ class UserManager(BaseUserManager):
 
 
 class User(BaseAbstractModel, AbstractBaseUser, PermissionsMixin):
-    USER_TYPE = (("ADMIN", "ADMIN"), ("USER", "USER"))
+    USER_TYPE = (("ADMIN", "ADMIN"), ("USER", "USER"), ("SUPER_ADMIN", "SUPER_ADMIN"))
 
     first_name = models.CharField(max_length=256)
     last_name = models.CharField(max_length=256)

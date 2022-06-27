@@ -3,6 +3,7 @@ from django.db import transaction
 from rest_framework import status
 from helpers.response import Response
 from helpers.permissions import IsAdminUser, IsUser
+from helpers.random_string import random_string
 
 from .models import Event, EventCategory, Ticket, CheckIn
 from . import serializers
@@ -62,8 +63,10 @@ class EventService:
         return event.participant.all()
 
     @classmethod
-    def generate_event_ticket(cls, event, user):
-        pass
+    def generate_event_ticket(cls, event, user, status, expiry_date):
+
+        # create ticket for a user for an event
+        ticket = TicketService.create_ticket(event, user, status, expiry_date)
 
     @classmethod
     def register_event(cls, user, event_id):
@@ -71,6 +74,10 @@ class EventService:
         event.participant.add(user)
         event.save()
 
+        # TODO: change this to event and user instance not event_id and user_id in the service
+        cls.generate_event_ticket(
+            event, user, status="ACTIVE", expiry_date=event.start_date
+        )
         return event
 
     @classmethod
@@ -126,3 +133,52 @@ class CheckInService:
     @classmethod
     def check_in(cls, event, user):
         check_in = CheckIn.object.create(event=event, user=user)
+
+
+class TicketService:
+    @classmethod
+    def create_ticket(cls, event, user, status, expiry_date):
+        ticket_id = random_string(11)
+        return Ticket.objects.create(
+            event=event,
+            owner=user,
+            ticket_id=ticket_id,
+            status=status,
+            expiry_date=expiry_date,
+        )
+
+    @classmethod
+    def get_ticket(cls, **kwargs):
+        return Ticket.objects.filter(**kwargs).first()
+
+    @classmethod
+    def list_tickets(cls, **kwargs):
+        return Ticket.objects.filter(**kwargs)
+
+    @classmethod
+    def verify_ticket_status(cls, ticket_id, event_id):
+        ticket = cls.get_ticket(id=ticket_id)
+        event = EventService.get_single_event(id=event_id)
+
+        # TODO: this code has not been tested oo
+        # and I'm not sure of this logic seff
+        if ticket.event.start_date > event.start_date:
+            ticket.status = "EXPIRED"
+            ticket.save()
+            return {"status": False, "message": "Ticket has expired"}
+        return {"status": True, "message": "Ticket is valid"}
+
+    @classmethod
+    def invalidate_ticket(cls, ticket_id):
+        ticket = cls.get_ticket(id=ticket_id)
+        ticket.status = "INVALID"
+        ticket.save()
+        return ticket
+
+    @classmethod
+    def verify_ticket(cls, ticket_number):
+        # TODO: Find a way to ensure the ticket number will always be unique
+        ticket = Ticket.objects.filter(ticket_id=ticket_number).first()
+        if ticket:
+            return True
+        return False

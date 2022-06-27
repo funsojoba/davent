@@ -2,7 +2,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 
-from helpers.permissions import IsAdminUser, IsUser
+from helpers.permissions import IsAdminUser, IsUser, IsSuperAdmin
 from helpers.response import Response
 from .serializers import (
     RegisterUserSerializer,
@@ -148,5 +148,14 @@ class UserViewset(viewsets.ViewSet):
     def get_user_profile(self, request):
         user = request.user
         service_response = UserService.get_user(email=user.email)
+        serializer = UserSerializer(service_response)
+        return Response(data=serializer.data)
+
+
+class UserAdminViewSet(viewsets.ViewSet):
+    permissionn_classes = [IsSuperAdmin]
+
+    def list(self, request):
+        service_response = UserService.get_all_users()
         serializer = UserSerializer(service_response)
         return Response(data=serializer.data)

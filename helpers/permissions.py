@@ -13,3 +13,9 @@ class IsUser(BasePermission):
         if not user.is_authenticated:
             return False
         return user.user_type == "USER"
+
+
+class IsSuperAdmin(BasePermission):
+    def has_permission(self, request, view):
+        user = request.user
+        return user.user_type == "SUPER_ADMIN"
