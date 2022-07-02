@@ -74,9 +74,10 @@ class EventService:
         event.participant.add(user)
         event.save()
 
-        # TODO: change this to event and user instance not event_id and user_id in the service
         cls.generate_event_ticket(
-            event, user, status="ACTIVE", expiry_date=event.start_date
+            event, user, 
+            status="ACTIVE", 
+            expiry_date=event.start_date
         )
         return event
 
@@ -148,8 +149,9 @@ class TicketService:
         )
 
     @classmethod
-    def get_ticket(cls, **kwargs):
-        return Ticket.objects.filter(**kwargs).first()
+    def get_ticket(cls, user, event_id):
+        event = EventService.get_single_event(id=event_id)
+        return Ticket.objects.filter(owner=user, event=event).first()
 
     @classmethod
     def list_tickets(cls, **kwargs):

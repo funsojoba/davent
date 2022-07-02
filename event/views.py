@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from helpers.permissions import IsAdminUser, IsUser
 from helpers.response import Response
 
-from .service import EventService, EventCategoryService
+from .service import EventService, EventCategoryService, TicketService
 from . import serializers
 from authentication.serializers import UserSerializer
 
@@ -18,8 +18,7 @@ class UserEventViewSet(viewsets.ViewSet):
         operation_summary="List Events",
         tags=["Event"],
     )
-    @action(detail=False, methods=["get"], url_path="list")
-    def list_events(self, request):
+    def list(self, request):
         service_response = EventService.get_events()
         # TODO: filter by location
         return Response(
@@ -33,11 +32,23 @@ class UserEventViewSet(viewsets.ViewSet):
         operation_summary="Register for Event",
         tags=["Event"],
     )
-    @action(detail=False, methods=["post"], url_path="register/(?P<pk>[a-z,A-Z,0-9]+)")
+    @action(detail=False, methods=["post"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/register")
     def register_event(self, request, pk):
         service_response = EventService.register_event(request.user, pk)
         return Response(
             data=dict(event=serializers.GetEventSerializer(service_response).data)
+        )
+    
+    @swagger_auto_schema(
+        operation_description="Get Event ticket",
+        operation_summary="Get Event ticket",
+        tags=["Event"],
+    )
+    @action(detail=False, methods=["get"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/ticket")
+    def event_ticket(self, request, pk):
+        service_response = TicketService.get_ticket(user=request.user, event_id=pk)
+        return Response(
+            data=serializers.TicketSerializer(service_response).data
         )
 
 

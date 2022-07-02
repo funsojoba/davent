@@ -1,4 +1,4 @@
-from .models import Event, EventCategory
+from .models import Event, EventCategory, Ticket, CheckIn
 from rest_framework import serializers
 from authentication.serializers import UserSerializer
 from organization.serializers import OrganizationSerializer
@@ -83,3 +83,10 @@ class UodateEventSerializer(serializers.Serializer):
     event_dp = serializers.CharField(required=False)
     location = serializers.CharField(required=False)
     address = serializers.CharField(required=False)
+
+class TicketSerializer(serializers.ModelSerializer):
+    owner = UserSerializer()
+    event = GetEventSerializer()
+    class Meta:
+        model = Ticket
+        fields = ("status", "event", "owner", "ticket_id", "expiry_date")

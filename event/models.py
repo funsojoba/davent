@@ -64,7 +64,7 @@ class Ticket(BaseAbstractModel):
     STATUS = (("ACTIVE", "ACTIVE"), ("EXPIRED", "EXPIRED"), ("INVALID", "INVALID"))
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="ticket")
     owner = models.ForeignKey("authentication.User", on_delete=models.CASCADE)
-    ticket_id = models.CharField(max_length=10, default=get_ticket_id)
+    ticket_id = models.CharField(max_length=256, default=get_ticket_id)
     status = models.CharField(choices=STATUS, max_length=20)
     expiry_date = models.DateTimeField()
 
