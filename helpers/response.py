@@ -36,3 +36,14 @@ class Response:
             raise InvalidResponse(
                 "None or dict-like structure expected for both data and errors"
             )
+
+
+class ResponseManager:
+    
+    @staticmethod
+    def handle_response(
+        data: Dict = {}, errors: Dict = {}, status: int = 200, message: str = ""
+    ) -> Response:
+        if errors:
+            return Response({"errors": errors, "message": message}, status=status)
+        return Response({"data": data, "message": message}, status=status)

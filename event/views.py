@@ -67,9 +67,7 @@ class AdminEventViewSet(viewsets.ViewSet):
 
         service_response = EventService.create_event(request.user, **serializer.data)
         return Response(
-            data=dict(
-                event=serializers.GetEventCategorySerializer(service_response).data
-            )
+            data=serializers.GetEventSerializer(service_response).data
         )
 
     @swagger_auto_schema(
@@ -159,6 +157,18 @@ class AdminEventViewSet(viewsets.ViewSet):
         )
         return Response(
             data=dict(event=serializers.GetEventSerializer(service_response).data)
+        )
+    
+    @swagger_auto_schema(
+        operation_description="List event tickets",
+        operation_summary="List event tickets",
+        tags=["Event-Admin"],
+    )
+    @action(detail=False, methods=["get"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/tickets")
+    def list_tickets(self, request, pk):
+        service_response = TicketService.list_event_tickets(pk)
+        return Response(
+            data=dict(event=serializers.TicketSerializer(service_response, many=True).data)
         )
 
 

@@ -32,11 +32,20 @@ class EventCategorySerializer(serializers.ModelSerializer):
 
 
 class GetEventSerializer(serializers.ModelSerializer):
-    owner = UserSerializer()
-    participant = UserSerializer(many=True)
-    category = EventCategorySerializer()
-    organization = OrganizationSerializer()
-
+    name = serializers.CharField(read_only=True)
+    owner = UserSerializer(read_only=True)
+    participant = UserSerializer(many=True, read_only=True)
+    category = EventCategorySerializer(read_only=True)
+    organization = OrganizationSerializer(read_only=True)
+    description = serializers.CharField(read_only=True)
+    start_date = serializers.DateTimeField(read_only=True)
+    end_date = serializers.DateTimeField(read_only=True)
+    event_type = serializers.ChoiceField(choices=Event.TYPE, read_only=True)
+    event_banner = serializers.CharField(read_only=True)
+    event_dp = serializers.CharField(read_only=True)
+    status = serializers.ChoiceField(choices=Event.STATUS, read_only=True)
+    location = serializers.ChoiceField(choices=Event.LOCATION, read_only=True)
+    address = serializers.CharField(read_only=True)
     class Meta:
         model = Event
         fields = (

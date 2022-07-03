@@ -4,11 +4,14 @@ from rest_framework import status
 from helpers.response import Response
 from helpers.permissions import IsAdminUser, IsUser
 from helpers.random_string import random_string
+from helpers.exception import CustomApiException
 
 from .models import Event, EventCategory, Ticket, CheckIn
 from . import serializers
 
 from authentication.service import UserService
+
+from helpers.response import Response
 
 
 class EventCategoryService:
@@ -36,6 +39,11 @@ class EventService:
         organization = OrganizationService.get_organization(
             id=kwargs.get("organization")
         )
+        
+        # TODO: check if event already exists
+        # existing_event = cls.get_single_event(name__iexact=kwargs.get("name"))
+        # if existing_event:
+        #     return CustomApiException({"errors":"Event name already exists"}, status.HTTP_400_BAD_REQUEST)
 
         return Event.objects.create(
             name=kwargs.get("name"),
@@ -156,6 +164,11 @@ class TicketService:
     @classmethod
     def list_tickets(cls, **kwargs):
         return Ticket.objects.filter(**kwargs)
+    
+    @classmethod
+    def list_event_tickets(cls, event_id):
+        event = EventService.get_single_event(id=event_id)
+        return Ticket.objects.filter(event=event)
 
     @classmethod
     def verify_ticket_status(cls, ticket_id, event_id):
