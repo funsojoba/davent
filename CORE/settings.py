@@ -240,3 +240,27 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'mysite/static'),
 ]
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+
+if not DEBUG:
+    SESSION_COOKIE_HTTPONLY = True
+    CSRF_COOKIE_HTTPONLY = True
+    # PRODUCTION SETTINGS
+
+    ADMINS = [('Funso', 'hrfunsojoba@gmail.com')]
+
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    #
+    SECURE_SSL_REDIRECT = True
+    #
+    SESSION_COOKIE_SECURE = True
+    #
+    CSRF_COOKIE_SECURE = True
+    #
+    SECURE_HSTS_SECONDS = 60
+    #
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    #
+    SECURE_HSTS_PRELOAD = True
+    #
+    SECURE_CONTENT_TYPE_NOSNIFF = True
