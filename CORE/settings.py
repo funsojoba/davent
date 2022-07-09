@@ -221,7 +221,7 @@ CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND", default="redis://redis:6
 CELERY_MAX_RETRY = ""
 CELERY_RETRY_DELAY = ""
 
-ENVIRONMENT = config("ENVIRONMENT")
+ENVIRONMENT = config("ENVIRONMENT", default="dev")
 
 BASE_URL = config("BASE_URL")
 
