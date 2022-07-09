@@ -13,7 +13,6 @@ RUN pip install --upgrade pip \
 
 COPY . .
 
-RUN python manage.py collectstatic --noinput
 
 
 CMD gunicorn CORE.wsgi:application --bind 0.0.0.0:$PORT

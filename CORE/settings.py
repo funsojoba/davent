@@ -223,7 +223,7 @@ CELERY_RETRY_DELAY = ""
 
 ENVIRONMENT = config("ENVIRONMENT", default="dev")
 
-BASE_URL = config("BASE_URL")
+BASE_URL = config("BASE_URL", default="davent.com")
 
 PAYSTACK_SECRET_KEY = config("PAYSTACK_SECRET_KEY")
 
