@@ -1,9 +1,15 @@
+import uuid
 import requests
 
 from authentication.service import UserService
 
 
 class PaymentManager:
+    
+    @classmethod
+    def generate_reference(cls):
+        pass
+    
     @classmethod
     def _initiate_request(cls):
         pass
