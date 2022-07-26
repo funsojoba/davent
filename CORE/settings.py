@@ -226,6 +226,7 @@ ENVIRONMENT = config("ENVIRONMENT", default="dev")
 BASE_URL = config("BASE_URL", default="davent.com")
 
 PAYSTACK_SECRET_KEY = config("PAYSTACK_SECRET_KEY")
+PAYSTACK_URL = config("PAYSTACK_URL")
 
 
 AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")

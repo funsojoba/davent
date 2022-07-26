@@ -1,18 +1,13 @@
 import uuid
 import requests
+from django.conf import settings
 
 from authentication.service import UserService
 
+from payment.integrations.paystack import Pay
 
 class PaymentManager:
     
-    @classmethod
-    def generate_reference(cls):
-        pass
-    
-    @classmethod
-    def _initiate_request(cls):
-        pass
 
     @classmethod
     def make_payment(cls):
