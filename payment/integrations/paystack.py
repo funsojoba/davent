@@ -15,7 +15,7 @@ class Paystack:
     
     
     @classmethod
-    def _initiate_request(cls, endpoint, payload, method="POST"):
+    def _initiate_request(cls, endpoint, payload=None, method="POST"):
         url = f"{BASE_URL}{endpoint}"
         
         headers = {
@@ -31,12 +31,25 @@ class Paystack:
     
     @classmethod
     def initiate_payment(cls, email, amount):
+        endpoint = "/transaction/initialize"
         payload = {
             "email":email,
             "amount":amount,
             "reference": cls.generate_reference("EV")
         }
         try:
-            cls._initiate_request(endpoint, payload)
+            response = cls._initiate_request(endpoint, payload)
         except:
             return False
+        return response
+        
+    
+    @classmethod
+    def verify_payment(cls, reference):
+        endpoint = f"transaction/verify/{reference}"
+        try:
+            response = cls._initiate_request(endpoint, payload, method="GET")
+        except Exception as e:
+            return False
+        return response
+        

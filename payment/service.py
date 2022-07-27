@@ -4,15 +4,32 @@ from django.conf import settings
 
 from authentication.service import UserService
 
-from payment.integrations.paystack import Pay
+from payment.integrations.paystack import Paystack
+from payment.models import Payment
+from event.service import EventService
 
 class PaymentManager:
     
+    @classmethod
+    def initiate_payment(cls, email, amount, event_id):
+        event = EventService.get_single_event(id=event_id)
+        buyer = UserService.get_user(email=email)
+        response = Paystack.initiate_payment(email, amount)
+        if response:
+            payment = Payment.objects.create(
+                amount=amount,
+                buyer=buyer,
+                status="PENDING",
+                event=event,
+                payment_context=response
+            )
+            return response, payment
+        return {"errors":"Could not initiate payment at this time, please try again later"}
 
     @classmethod
-    def make_payment(cls):
+    def verify_payment(cls, reference, event, payment_id):
         pass
-
+    
     @classmethod
     def persist_payment_data(cls):
         pass
