@@ -18,6 +18,7 @@ class Payment(BaseAbstractModel):
     status = models.CharField(max_length=30, choices=STATUS)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     payment_context = models.JSONField(default=dict, null=True, blank=True)
+    transaction_context = models.JSONField(default=dict, null=True, blank=True)
 
     def __str__(self):
         return f"{self.buyer.first_name}'s for {self.event.name} "

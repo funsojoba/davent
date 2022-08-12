@@ -189,9 +189,7 @@ class EventCategoryViewSet(viewsets.ViewSet):
             request.user, name=serializer.data.get("name")
         )
         return Response(
-            data=dict(
-                event=serializers.GetEventCategorySerializer(service_response).data
-            )
+            data=serializers.GetEventCategorySerializer(service_response).data
         )
 
     @swagger_auto_schema(
@@ -205,4 +203,4 @@ class EventCategoryViewSet(viewsets.ViewSet):
             service_response, many=True
         ).data
 
-        return Response(data=dict(event=serializer))
+        return Response(data=dict(event_category=serializer))

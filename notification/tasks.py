@@ -10,6 +10,9 @@ from notification.utils import EmailManager
 )
 def send_mail_async(self, template, recipients: List[str], subject, context):
     mail = EmailManager(
-        template=template, recipients=recipients, subject=subject, context=context
+        template=template, 
+        recipients=recipients, 
+        subject=subject, 
+        context=context
     )
     mail.send()

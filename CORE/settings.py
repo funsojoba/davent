@@ -31,7 +31,7 @@ SECRET_KEY = os.environ.get(
 # SECURITY WARNING: don't run with debug turned on in production!
 
 # DEBUG = int(os.environ.get("DEBUG", default=1))
-DEBUG = True
+DEBUG = config("DEBUG", cast=bool, default=True) is True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -105,8 +105,19 @@ DATABASE_URL = config(
     default="postgres://nwbadcevwqsjen:f91a1eb4d078702f5cdb272831b35c98e88779e7212480fe5a679c18bd9e9381@ec2-18-235-114-62.compute-1.amazonaws.com:5432/d2jv2cgjppp6rs",
 )
 
-DATABASES = {"default": dj_database_url.parse(DATABASE_URL, conn_max_age=0)}
+# this is the AWS RDS database, set it up later
+# DATABASES = {"default": dj_database_url.parse(DATABASE_URL, conn_max_age=0)}
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config("POSTGRES_DBNAME"),
+        'USER': config("POSTGRES_USER"),
+        'PASSWORD': config("POSTGRES_PASS"),
+        'HOST': config("PG_HOST"),
+        'PORT': config("PG_PORT"),
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -229,39 +240,16 @@ PAYSTACK_SECRET_KEY = config("PAYSTACK_SECRET_KEY")
 PAYSTACK_URL = config("PAYSTACK_URL")
 
 
-AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY")
-AWS_STORAGE_BUCKET_NAME = config("AWS_STORAGE_BUCKET_NAME")
-AWS_S3_FILE_OVERWRITE=False
-AWS_LOCATION = 'static'
-AWS_DEFAULT_ACL=None
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
+# AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY")
+# AWS_STORAGE_BUCKET_NAME = config("AWS_STORAGE_BUCKET_NAME")
+# AWS_S3_FILE_OVERWRITE=False
+# AWS_LOCATION = 'static'
+# AWS_DEFAULT_ACL=None
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'mysite/static'),
-]
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'mysite/static'),
+# ]
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-
-# if not DEBUG:
-#     SESSION_COOKIE_HTTPONLY = True
-#     CSRF_COOKIE_HTTPONLY = True
-#     # PRODUCTION SETTINGS
-
-#     ADMINS = [('Funso', 'hrfunsojoba@gmail.com')]
-
-#     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-#     #
-#     SECURE_SSL_REDIRECT = True
-#     #
-#     SESSION_COOKIE_SECURE = True
-#     #
-#     CSRF_COOKIE_SECURE = True
-#     #
-#     SECURE_HSTS_SECONDS = 60
-#     #
-#     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-#     #
-#     SECURE_HSTS_PRELOAD = True
-#     #
-#     SECURE_CONTENT_TYPE_NOSNIFF = True

@@ -16,11 +16,11 @@ class Paystack:
     
     @classmethod
     def _initiate_request(cls, endpoint, payload=None, method="POST"):
-        url = f"{BASE_URL}{endpoint}"
+        url = f"{cls.BASE_URL}{endpoint}"
         
         headers = {
             "Accept":"application/json",
-            "Authorization": f"Bearer {setting.PAYSTACK_SECRET_KEY}",
+            "Authorization": f"Bearer {settings.PAYSTACK_SECRET_KEY}",
         }
         if method == "GET":
             response = requests.request(method, url, headers=headers)
@@ -39,7 +39,8 @@ class Paystack:
         }
         try:
             response = cls._initiate_request(endpoint, payload)
-        except:
+        except Exception as e:
+            print("EXCEPTION", e)
             return False
         return response
         
@@ -48,7 +49,7 @@ class Paystack:
     def verify_payment(cls, reference):
         endpoint = f"transaction/verify/{reference}"
         try:
-            response = cls._initiate_request(endpoint, payload, method="GET")
+            response = cls._initiate_request(endpoint, method="GET")
         except Exception as e:
             return False
         return response
