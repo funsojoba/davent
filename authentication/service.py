@@ -69,8 +69,20 @@ class UserService:
 
     @classmethod
     def update_user(cls, user, **kwargs):
-        user = User(**kwargs)
+        avatar = kwargs.get("avatar")
+        user.first_name = kwargs.get("first_name", user.first_name)
+        user.last_name = kwargs.get("last_name", user.last_name)
+        user.email = kwargs.get("email", user.email)
+        user.phone_number = kwargs.get("phone_number", user.phone_number)
+        user.city = kwargs.get("city", user.city)
+        user.state = kwargs.get("state", user.state)
+        user.country = kwargs.get("country", user.country)
+
+        if avatar:
+            # TODO: upload avatar to AWS S3
+            pass
         user.save()
+        return user
 
     @classmethod
     def get_user(cls, **kwargs):

@@ -58,3 +58,27 @@ class ResetPasswordSerializer(serializers.Serializer):
 class VerifyResetPassword(serializers.Serializer):
     code = serializers.CharField()
     email = serializers.EmailField()
+
+
+class UpdateUserSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(max_length=200, required=None)
+    last_name = serializers.CharField(max_length=200, required=None)
+    email = serializers.CharField(max_length=200, required=None)
+    phone_number = serializers.CharField(max_length=200, required=None)
+    city = serializers.CharField(max_length=200, required=None)
+    state = serializers.CharField(max_length=200, required=None)
+    country = serializers.CharField(max_length=200, required=None)
+    avatar = serializers.CharField(max_length=200, required=None)
+
+    class Meta:
+        model = User
+        fields = (
+            "first_name",
+            "last_name",
+            "email",
+            "phone_number",
+            "city",
+            "state",
+            "country",
+            "avatar",
+        )

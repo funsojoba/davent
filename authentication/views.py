@@ -13,6 +13,7 @@ from .serializers import (
     UserSerializer,
     ResetPasswordSerializer,
     LoginUserSerializer,
+    UpdateUserSerializer,
 )
 
 from .service import UserService
@@ -150,6 +151,19 @@ class UserViewset(viewsets.ViewSet):
         service_response = UserService.get_user(email=user.email)
         serializer = UserSerializer(service_response)
         return Response(data=serializer.data)
+
+    @swagger_auto_schema(
+        operation_description="Update user detail",
+        operation_summary="Update user detail",
+        tags=["User"],
+        responses=schema_example.GET_USER_DATA,
+    )
+    @action(detail=False, methods=["patch"], url_path="me/update")
+    def patch(self, request):
+        serializer = UpdateUserSerializer(data=request.data)
+        serializer.is_valid()
+        service_response = UserService.update_user(request.user, **serializer.data)
+        return Response(data=UserSerializer(service_response).data)
 
 
 class UserAdminViewSet(viewsets.ViewSet):
