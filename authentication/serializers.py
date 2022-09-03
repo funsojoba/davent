@@ -82,3 +82,7 @@ class UpdateUserSerializer(serializers.ModelSerializer):
             "country",
             "avatar",
         )
+
+
+class UserAvatarSerializer(serializers.Serializer):
+    avatar = serializers.FileField()

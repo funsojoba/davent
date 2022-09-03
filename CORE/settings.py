@@ -47,16 +47,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    
     # installed app
-    'storages',
+    "storages",
     "drf_yasg",
     "corsheaders",
     "rest_framework",
     "django_celery_beat",
     "django_celery_results",
     "rest_framework_simplejwt",
-    
     # local apps
     "authentication",
     "organization",
@@ -109,13 +107,13 @@ DATABASE_URL = config(
 # DATABASES = {"default": dj_database_url.parse(DATABASE_URL, conn_max_age=0)}
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config("POSTGRES_DBNAME"),
-        'USER': config("POSTGRES_USER"),
-        'PASSWORD': config("POSTGRES_PASS"),
-        'HOST': config("PG_HOST"),
-        'PORT': config("PG_PORT"),
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("POSTGRES_DBNAME"),
+        "USER": config("POSTGRES_USER"),
+        "PASSWORD": config("POSTGRES_PASS"),
+        "HOST": config("PG_HOST"),
+        "PORT": config("PG_PORT"),
     }
 }
 
@@ -240,16 +238,17 @@ PAYSTACK_SECRET_KEY = config("PAYSTACK_SECRET_KEY")
 PAYSTACK_URL = config("PAYSTACK_URL")
 
 
-# AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
-# AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY")
-# AWS_STORAGE_BUCKET_NAME = config("AWS_STORAGE_BUCKET_NAME")
-# AWS_S3_FILE_OVERWRITE=False
-# AWS_LOCATION = 'static'
-# AWS_DEFAULT_ACL=None
-# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = config("AWS_STORAGE_BUCKET_NAME")
+AWS_S3_FILE_OVERWRITE = False
+AWS_LOCATION = "static"
+AWS_DEFAULT_ACL = None
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'mysite/static'),
-# ]
-# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "mysite/static"),
+]
+STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'  # for static files from tutorial
+AWS_DEFAULT_ACL = "public-read"

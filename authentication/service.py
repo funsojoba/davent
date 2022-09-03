@@ -9,6 +9,8 @@ from helpers.generate_otp import get_otp
 from helpers.cache_manager import CacheManager
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from helpers.boto3 import AWSFileUploadManger
+
 from notification.service import EmailService
 
 from .serializers import UserSerializer
@@ -162,3 +164,13 @@ class UserService:
     @classmethod
     def get_all_users(cls):
         return User.objects.all()
+
+    @classmethod
+    def set_user_avatar(cls, user, avatar):
+        # user.avatar = avatar
+        # user.save()
+        avatar_uploader = AWSFileUploadManger()
+        avatar_uploader.upload_file_object(
+            file_object=avatar.file, file_name=avatar._name
+        )
+        return user

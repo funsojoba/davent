@@ -14,6 +14,7 @@ from .serializers import (
     ResetPasswordSerializer,
     LoginUserSerializer,
     UpdateUserSerializer,
+    UserAvatarSerializer,
 )
 
 from .service import UserService
@@ -164,6 +165,23 @@ class UserViewset(viewsets.ViewSet):
         serializer.is_valid()
         service_response = UserService.update_user(request.user, **serializer.data)
         return Response(data=UserSerializer(service_response).data)
+
+    @swagger_auto_schema(
+        operation_description="Update user Avatar",
+        operation_summary="Update user Avatar",
+        tags=["User"],
+        request_body=UserAvatarSerializer
+        # responses=schema_example.GET_USER_DATA,
+    )
+    @action(detail=False, methods=["post"], url_path="me/avatar")
+    def upload_avatar(self, request):
+        serializer_ = UserAvatarSerializer(data=request.data)
+        serializer_.is_valid(raise_exception=True)
+        print(request.data.get("avatar").file, request.data.get("avatar")._name)
+        service_response = UserService.set_user_avatar(
+            user=request.user, avatar=request.data.get("avatar")
+        )
+        return Response(data={"Testing": "Tested"})
 
 
 class UserAdminViewSet(viewsets.ViewSet):
