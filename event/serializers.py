@@ -99,3 +99,10 @@ class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
         fields = ("status", "event", "owner", "ticket_id", "expiry_date")
+        
+        
+class SendEmailSerializer(serializers.Serializer):
+    subject = serializers.CharField()
+    message = serializers.CharField()
+    link = serializers.CharField(required=False)
+    link_text = serializers.CharField(required=False)

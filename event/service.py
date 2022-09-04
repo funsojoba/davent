@@ -10,6 +10,7 @@ from .models import Event, EventCategory, Ticket, CheckIn
 from . import serializers
 
 from authentication.service import UserService
+from notification.service import EmailService
 
 from helpers.response import Response
 
@@ -136,6 +137,25 @@ class EventService:
 
         event.save()
         return event
+    
+    @classmethod
+    def send_email_to_users(cls, event_id, user, subject, message, link:str=None, link_text:str=None):
+        event = cls.get_single_event(id=event_id)
+        users = event.participant.all()
+        
+        user_emails = [user.email for user in users]
+        context = {
+            "event_name":event.name,
+            "message":message,
+            "link":link,
+            "link_text":link_text
+        }
+        EmailService.send_async(
+            template="user_event_alert.html", 
+            subject=subject, 
+            recipients=user_emails, 
+            context=context)
+        return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
 
 
 class CheckInService:

@@ -170,6 +170,20 @@ class AdminEventViewSet(viewsets.ViewSet):
         return Response(
             data=dict(event=serializers.TicketSerializer(service_response, many=True).data)
         )
+        
+    @swagger_auto_schema(
+        operation_description="Admin send email to users",
+        operation_summary="Admin send email to users",
+        tags=["Event-Admin"],
+    )
+    @action(detail=False, methods=["post"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/send-email")
+    def send_user_email(self, request, pk):
+        serializer_ = serializers.SendEmailSerializer(data=request.data)
+        serializer_.is_valid(raise_exception=True)
+        
+        return EventService.send_email_to_users(event_id=pk, user=request.user, **serializer_.data)
+        
+        
 
 
 class EventCategoryViewSet(viewsets.ViewSet):
