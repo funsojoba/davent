@@ -40,7 +40,7 @@ class EventService:
         organization = OrganizationService.get_organization(
             id=kwargs.get("organization")
         )
-        
+
         # TODO: check if event already exists
         # existing_event = cls.get_single_event(name__iexact=kwargs.get("name"))
         # if existing_event:
@@ -84,9 +84,7 @@ class EventService:
         event.save()
 
         cls.generate_event_ticket(
-            event, user, 
-            status="ACTIVE", 
-            expiry_date=event.start_date
+            event, user, status="ACTIVE", expiry_date=event.start_date
         )
         return event
 
@@ -137,25 +135,32 @@ class EventService:
 
         event.save()
         return event
-    
+
     @classmethod
-    def send_email_to_users(cls, event_id, user, subject, message, link:str=None, link_text:str=None):
+    def send_email_to_users(
+        cls, event_id, user, subject, message, link: str = None, link_text: str = None
+    ):
         event = cls.get_single_event(id=event_id)
         users = event.participant.all()
-        
+
         user_emails = [user.email for user in users]
         context = {
-            "event_name":event.name,
-            "message":message,
-            "link":link,
-            "link_text":link_text
+            "event_name": event.name,
+            "message": message,
+            "link": link,
+            "link_text": link_text,
         }
+
+        # TODO: this is throwing template not found error
         EmailService.send_async(
-            template="user_event_alert.html", 
-            subject=subject, 
-            recipients=user_emails, 
-            context=context)
-        return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
+            template="user_event_alert.html",
+            subject=subject,
+            recipients=user_emails,
+            context=context,
+        )
+        return Response(
+            {"message": "Email sent successfully"}, status=status.HTTP_200_OK
+        )
 
 
 class CheckInService:
@@ -184,7 +189,7 @@ class TicketService:
     @classmethod
     def list_tickets(cls, **kwargs):
         return Ticket.objects.filter(**kwargs)
-    
+
     @classmethod
     def list_event_tickets(cls, event_id):
         event = EventService.get_single_event(id=event_id)
