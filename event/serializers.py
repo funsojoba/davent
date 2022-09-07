@@ -4,6 +4,7 @@ from authentication.serializers import UserSerializer
 from organization.serializers import OrganizationSerializer
 
 from event.validators import Validator
+from authentication.validators import UserValidator
 
 
 class CreateEventSerializer(serializers.ModelSerializer):

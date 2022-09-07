@@ -97,6 +97,8 @@ class EventService:
         with transaction.atomic():
             for user_id in user_ids:
                 user = UserService.get_user(id=user_id)
+                if not user:
+                    continue
                 event.participant.add(user)
         return event
 
