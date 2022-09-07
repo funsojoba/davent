@@ -1,5 +1,5 @@
 import smtplib
-from typing import List
+from typing import List, Dict
 from celery import shared_task
 from notification.utils import EmailManager
 
@@ -8,11 +8,8 @@ from notification.utils import EmailManager
     bind=True,
     autoretry_for=(smtplib.SMTPException,),
 )
-def send_mail_async(self, template, recipients: List[str], subject, context):
+def send_mail_async(self, template, recipients: List[str], subject: str, context: Dict):
     mail = EmailManager(
-        template=template, 
-        recipients=recipients, 
-        subject=subject, 
-        context=context
+        template=template, recipients=recipients, subject=subject, context=context
     )
     mail.send()

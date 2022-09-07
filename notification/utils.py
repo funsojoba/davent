@@ -5,7 +5,9 @@ from django.utils.html import strip_tags
 
 
 class EmailManager:
-    def __init__(self, template, recipients=[], subject=None, context={}):
+    def __init__(
+        self, template, recipients: list = [], subject: str = None, context: dict = {}
+    ):
         self.template = template
         self.subject = subject
         self.context = context

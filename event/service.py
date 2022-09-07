@@ -219,6 +219,4 @@ class TicketService:
     def verify_ticket(cls, ticket_number):
         # TODO: Find a way to ensure the ticket number will always be unique
         ticket = Ticket.objects.filter(ticket_id=ticket_number).first()
-        if ticket:
-            return True
-        return False
+        return True if ticket else False
