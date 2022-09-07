@@ -13,6 +13,4 @@ RUN pip install --upgrade pip \
 
 COPY . .
 
-
-
 CMD gunicorn CORE.wsgi:application --bind 0.0.0.0:$PORT
