@@ -41,11 +41,6 @@ class EventService:
             id=kwargs.get("organization")
         )
 
-        # TODO: check if event already exists
-        # existing_event = cls.get_single_event(name__iexact=kwargs.get("name"))
-        # if existing_event:
-        #     return CustomApiException({"errors":"Event name already exists"}, status.HTTP_400_BAD_REQUEST)
-
         return Event.objects.create(
             name=kwargs.get("name"),
             description=kwargs.get("description"),

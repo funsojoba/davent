@@ -3,8 +3,11 @@ from rest_framework import serializers
 from authentication.serializers import UserSerializer
 from organization.serializers import OrganizationSerializer
 
+from event.validators import Validator
+
 
 class CreateEventSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(validators=[Validator.validate_existing_event])
     event_type = serializers.ChoiceField(choices=Event.TYPE)
     location = serializers.ChoiceField(choices=Event.LOCATION)
 
@@ -46,6 +49,7 @@ class GetEventSerializer(serializers.ModelSerializer):
     status = serializers.ChoiceField(choices=Event.STATUS, read_only=True)
     location = serializers.ChoiceField(choices=Event.LOCATION, read_only=True)
     address = serializers.CharField(read_only=True)
+
     class Meta:
         model = Event
         fields = (
@@ -93,14 +97,16 @@ class UodateEventSerializer(serializers.Serializer):
     location = serializers.CharField(required=False)
     address = serializers.CharField(required=False)
 
+
 class TicketSerializer(serializers.ModelSerializer):
     owner = UserSerializer()
     event = GetEventSerializer()
+
     class Meta:
         model = Ticket
         fields = ("status", "event", "owner", "ticket_id", "expiry_date")
-        
-        
+
+
 class SendEmailSerializer(serializers.Serializer):
     subject = serializers.CharField()
     message = serializers.CharField()
