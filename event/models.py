@@ -9,8 +9,7 @@ from organization.models import Organization
 
 def get_ticket_id():
     string_chr = string.ascii_uppercase + string.digits
-    ticket_id = "".join(random.choices(string.digits, k=8))
-    return ticket_id
+    return "".join(random.choices(string_chr, k=8))
 
 
 class EventCategory(BaseAbstractModel):
@@ -72,3 +71,16 @@ class Ticket(BaseAbstractModel):
 class CheckIn(BaseAbstractModel):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     user = models.ForeignKey("authentication.User", on_delete=models.DO_NOTHING)
+
+
+class EventPayment(BaseAbstractModel):
+    user = models.ForeignKey("authentication.User", on_delete=models.CASCADE)
+    event = models.ForeignKey("event.Event", on_delete=models.CASCADE)
+    payment = models.ForeignKey("payment.Payment", on_delete=models.CASCADE)
+    ticket = models.ForeignKey("event.Ticket", on_delete=models.CASCADE)
+
+    """
+        >>> Create event
+        >>> if event is paid, create payment and ticket
+        >>> then create event payment (EventPayment model) to link event and payment
+    """
