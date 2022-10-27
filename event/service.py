@@ -217,3 +217,12 @@ class TicketService:
         # TODO: Find a way to ensure the ticket number will always be unique
         ticket = Ticket.objects.filter(ticket_id=ticket_number).first()
         return True if ticket else False
+
+
+class EventPaymetService:
+    @classmethod
+    def create_event_payment(cls, event_id):
+        event = EventService.get_single_event(id=event_id)
+
+        if event.event_type == "PAID":
+            EventPayment.objects.create(event=event, status="PENDING")

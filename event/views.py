@@ -9,6 +9,8 @@ from .service import EventService, EventCategoryService, TicketService
 from . import serializers
 from authentication.serializers import UserSerializer
 
+from helpers.response import paginate_response
+
 
 class UserEventViewSet(viewsets.ViewSet):
     permission_classes = [IsUser | IsAdminUser]
@@ -38,7 +40,7 @@ class UserEventViewSet(viewsets.ViewSet):
         return Response(
             data=dict(event=serializers.GetEventSerializer(service_response).data)
         )
-    
+
     @swagger_auto_schema(
         operation_description="Get Event ticket",
         operation_summary="Get Event ticket",
@@ -47,9 +49,7 @@ class UserEventViewSet(viewsets.ViewSet):
     @action(detail=False, methods=["get"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/ticket")
     def event_ticket(self, request, pk):
         service_response = TicketService.get_ticket(user=request.user, event_id=pk)
-        return Response(
-            data=serializers.TicketSerializer(service_response).data
-        )
+        return Response(data=serializers.TicketSerializer(service_response).data)
 
 
 class AdminEventViewSet(viewsets.ViewSet):
@@ -66,9 +66,7 @@ class AdminEventViewSet(viewsets.ViewSet):
             return Response(errors=serializer.errors)
 
         service_response = EventService.create_event(request.user, **serializer.data)
-        return Response(
-            data=serializers.GetEventSerializer(service_response).data
-        )
+        return Response(data=serializers.GetEventSerializer(service_response).data)
 
     @swagger_auto_schema(
         operation_description="List events",
@@ -77,10 +75,9 @@ class AdminEventViewSet(viewsets.ViewSet):
     )
     def list(self, request):
         service_response = EventService.get_events(owner=request.user)
-        return Response(
-            data=dict(
-                event=serializers.GetEventSerializer(service_response, many=True).data
-            )
+
+        return paginate_response(
+            service_response, serializers.GetEventSerializer, request
         )
 
     @swagger_auto_schema(
@@ -92,13 +89,10 @@ class AdminEventViewSet(viewsets.ViewSet):
         detail=False, methods=["get"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/participants"
     )
     def get_all_event_participants(self, request, pk=None):
-        # TODO: paginate this and also return count
         participants = EventService.get_event_participants(
             user=request.user, event_id=pk
         )
-        return Response(
-            data=dict(participants=UserSerializer(participants, many=True).data)
-        )
+        return paginate_response(participants, UserSerializer, request)
 
     @swagger_auto_schema(
         operation_description="Admin registers users for an event",
@@ -158,7 +152,7 @@ class AdminEventViewSet(viewsets.ViewSet):
         return Response(
             data=dict(event=serializers.GetEventSerializer(service_response).data)
         )
-    
+
     @swagger_auto_schema(
         operation_description="List event tickets",
         operation_summary="List event tickets",
@@ -168,22 +162,26 @@ class AdminEventViewSet(viewsets.ViewSet):
     def list_tickets(self, request, pk):
         service_response = TicketService.list_event_tickets(pk)
         return Response(
-            data=dict(event=serializers.TicketSerializer(service_response, many=True).data)
+            data=dict(
+                event=serializers.TicketSerializer(service_response, many=True).data
+            )
         )
-        
+
     @swagger_auto_schema(
         operation_description="Admin send email to users",
         operation_summary="Admin send email to users",
         tags=["Event-Admin"],
     )
-    @action(detail=False, methods=["post"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/send-email")
+    @action(
+        detail=False, methods=["post"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/send-email"
+    )
     def send_user_email(self, request, pk):
         serializer_ = serializers.SendEmailSerializer(data=request.data)
         serializer_.is_valid(raise_exception=True)
-        
-        return EventService.send_email_to_users(event_id=pk, user=request.user, **serializer_.data)
-        
-        
+
+        return EventService.send_email_to_users(
+            event_id=pk, user=request.user, **serializer_.data
+        )
 
 
 class EventCategoryViewSet(viewsets.ViewSet):
