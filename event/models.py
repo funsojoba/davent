@@ -58,6 +58,9 @@ class Event(BaseAbstractModel):
     def __str__(self):
         return self.name
 
+    def get_participant_count(self):
+        return self.participant.count()
+
 
 class Ticket(BaseAbstractModel):
     STATUS = (("ACTIVE", "ACTIVE"), ("EXPIRED", "EXPIRED"), ("INVALID", "INVALID"))
