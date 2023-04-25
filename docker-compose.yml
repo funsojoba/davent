@@ -21,7 +21,7 @@ services:
   db:
     image: 'postgres:12'
     hostname: postgres
-    container_name: db
+    container_name: davent_db
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
     environment:
