@@ -19,30 +19,9 @@ from django.urls import path, include
 
 from rest_framework import permissions
 
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
-
-
-schema_view = get_schema_view(
-    openapi.Info(
-        title="Davent API",
-        default_version="v1",
-        description="Set up your event registration with ease",
-        terms_of_service="https://www.google.com/policies/terms/",
-        contact=openapi.Contact(email="contact@snippets.local"),
-    ),
-    # validators=["ssv", "flex"],
-    public=True,
-    permission_classes=[permissions.AllowAny],
-)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path(
-        "docs/",
-        schema_view.with_ui("swagger", cache_timeout=None),
-        name="schema-swagger-ui",
-    ),
     path("api/v1/auth/", include("authentication.urls")),
     path("api/v1/organization/", include("organization.urls")),
     path("api/v1/event/", include("event.urls")),

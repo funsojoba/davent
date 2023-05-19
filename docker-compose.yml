@@ -1,6 +1,23 @@
 version: '3.3'
 
 services:
+  db:
+    image: 'postgres:12'
+    hostname: postgres
+    container_name: davent_db
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DBNAME=postgres
+    ports:
+      - '5433:5432'
+
+  redis:
+    image: redis:alpine
+    container_name: davent_redis
+
   web:
     build: .
     container_name: davent_image
@@ -17,23 +34,6 @@ services:
     depends_on:
       - db
       - redis
-
-  db:
-    image: 'postgres:12'
-    hostname: postgres
-    container_name: davent_db
-    volumes:
-      - ./tmp/db:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DBNAME=postgres
-    ports:
-      - '5432:5432'
-
-  redis:
-    image: redis:alpine
-    container_name: davent_redis
 
   celery:
     build: .
