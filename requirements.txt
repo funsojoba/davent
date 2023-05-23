@@ -76,3 +76,11 @@ python-decouple
 django-storages
 django-cors-headers
 django-celery-beat
+django-celery-results
+rest-framework-simplejwt
+djangorestframework-simplejwt
+psycopg2-binary
+boto3
+botocore
+drf_yasg
+django-redis
