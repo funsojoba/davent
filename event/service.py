@@ -92,7 +92,8 @@ class EventService:
         """
         this service allows an admin registers multiple users for an event
         """
-        # TODO: find a way to limit entries to maybe 10 at ones
+        if len(user_ids) > 10:
+            pass
         event = cls.get_single_event(id=event_id)
         with transaction.atomic():
             for user_id in user_ids:
