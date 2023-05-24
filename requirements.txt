@@ -84,3 +84,4 @@ boto3
 botocore
 drf_yasg
 django-redis
+whitenoise
