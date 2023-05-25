@@ -11,3 +11,11 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "CORE.settings")
 app = Celery("CORE")
 app.config_from_object(settings, namespace="CELERY")
 app.autodiscover_tasks()
+
+
+app.conf.beat_schedule = {
+    "run-update-old-event-status-every-24-hours": {
+        "task": "task.update-old-event-status",
+        "schedule": crontab(day_of_week="0-6", hour=9, minute=00),
+    }
+}

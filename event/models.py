@@ -57,6 +57,8 @@ class Event(BaseAbstractModel):
     event_country = models.CharField(max_length=200, null=True, blank=True)
     address = models.CharField(max_length=250, blank=True, null=True)
     amount = models.DecimalField(max_digits=19, decimal_places=10, default=0.0)
+    event_url = models.URLField(blank=True, null=True)
+    rsvp = models.JSONField(default=list, null=True, blank=True)
     # TODO: find a way to capture location, maybe some geolocation stuffs
     def __str__(self):
         return self.name

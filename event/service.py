@@ -68,12 +68,19 @@ class EventService:
 
     @classmethod
     def generate_event_ticket(cls, event, user, status, expiry_date):
+        """
+        This method generates event ticket for user in background
+        """
+        from event.tasks import generate_ticket_async
 
         # create ticket for a user for an event
-        ticket = TicketService.create_ticket(event, user, status, expiry_date)
+        ticket = generate_ticket_async.delay(event, user, status, expiry_date)
 
     @classmethod
     def register_event(cls, user, event_id):
+        """
+        This method allows a user register for an event
+        """
         event = Event.objects.filter(id=event_id).first()
         event.participant.add(user)
         event.save()
