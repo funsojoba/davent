@@ -40,21 +40,35 @@ class EventService:
         organization = OrganizationService.get_organization(
             id=kwargs.get("organization")
         )
+        event_type = kwargs.get("event_type")
+
+        if event_type.lower() == "paid" and kwargs.get("amount") is None:
+            raise CustomApiException(
+                detail="Amount is required for paid event",
+                status_code=status.HTTP_400_BAD_REQUEST,
+            )
 
         return Event.objects.create(
             name=kwargs.get("name"),
             description=kwargs.get("description"),
             start_date=kwargs.get("start_date"),
             end_date=kwargs.get("end_date"),
+            organization=organization,
             owner=user,
             status=kwargs.get("status"),
-            event_type=kwargs.get("event_type"),
+            event_type=event_type.upper(),
+            category=event_category,
             event_banner=kwargs.get("event_banner", ""),
             event_dp=kwargs.get("event_dp", ""),
-            organization=organization,
-            category=event_category,
             location=kwargs.get("location"),
             address=kwargs.get("address", ""),
+            event_url=kwargs.get("event_url"),
+            rsvp=kwargs.get("rsvp"),
+            amount=kwargs.get("amount"),
+            event_city=kwargs.get("event_city"),
+            event_country=kwargs.get("event_country"),
+            event_state=kwargs.get("event_state"),
+            currency=kwargs.get("currency"),
         )
 
     @classmethod

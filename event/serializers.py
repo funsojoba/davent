@@ -11,6 +11,14 @@ class CreateEventSerializer(serializers.ModelSerializer):
     name = serializers.CharField(validators=[Validator.validate_existing_event])
     event_type = serializers.ChoiceField(choices=Event.TYPE)
     location = serializers.ChoiceField(choices=Event.LOCATION)
+    address = serializers.CharField(required=False)
+    event_url = serializers.CharField(required=False)
+    rsvp = serializers.ListField(required=False, child=serializers.CharField())
+    amount = serializers.DecimalField(max_digits=12, decimal_places=2, required=False)
+    event_city = serializers.CharField(required=False)
+    event_country = serializers.CharField(required=False)
+    event_state = serializers.CharField(required=False)
+    currency = serializers.CharField(required=False)
 
     class Meta:
         model = Event
@@ -26,6 +34,14 @@ class CreateEventSerializer(serializers.ModelSerializer):
             "event_banner",
             "event_dp",
             "location",
+            "address",
+            "event_url",
+            "rsvp",
+            "amount",
+            "event_city",
+            "event_country",
+            "event_state",
+            "currency",
         )
 
 
