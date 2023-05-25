@@ -81,6 +81,9 @@ class OrganizationViewSet(viewsets.ViewSet):
     )
     @action(detail=False, methods=["get"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/events")
     def get_organization_event(self, request, pk):
+        """
+        This function returns a list of events by an organization
+        """
         service_response = OrganizationService.get_events_by_organization(org_id=pk)
         serializer = GetEventSerializer(service_response, many=True)
         return Response(data=dict(data=serializer.data))

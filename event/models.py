@@ -52,6 +52,9 @@ class Event(BaseAbstractModel):
     event_banner = models.URLField(blank=True, null=True)
     event_dp = models.URLField(blank=True, null=True)
     location = models.CharField(max_length=50, choices=LOCATION)
+    event_city = models.CharField(max_length=256, null=True)
+    event_state = models.CharField(max_length=200, null=True, blank=True)
+    event_country = models.CharField(max_length=200, null=True, blank=True)
     address = models.CharField(max_length=250, blank=True, null=True)
     amount = models.DecimalField(max_digits=19, decimal_places=10, default=0.0)
     # TODO: find a way to capture location, maybe some geolocation stuffs

@@ -2,8 +2,13 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 
+from django.db.models import Q
+from django.utils import timezone
+
+
 from helpers.permissions import IsAdminUser, IsUser
 from helpers.response import Response
+from helpers.validator import is_valid_date_format
 
 from .service import EventService, EventCategoryService, TicketService
 from . import serializers
@@ -21,8 +26,22 @@ class UserEventViewSet(viewsets.ViewSet):
         tags=["Event"],
     )
     def list(self, request):
-        service_response = EventService.get_events()
-        # TODO: filter by location
+        # Get events around a user that is active and valid date
+        # date_value = dateparse.parse_date(date)
+        today = timezone.now()
+        start_date = request.query_params.get("start_date", today)
+        event_country = request.query_params.get("event_country", request.user.country)
+        event_state = request.query_params.get("event_state", request.user.state)
+        event_city = request.query_params.get("event_state", request.user.city)
+
+        if is_valid_date_format(start_date.strftime("%Y-%m-%d")):
+            service_response = EventService.get_events().filter(
+                Q(event_state=event_state)
+                | Q(event_country=event_country)
+                | Q(event_city=event_city),
+                status="ACTIVE",
+                start_date__gte=start_date,
+            )
         return Response(
             data=dict(
                 event=serializers.GetEventSerializer(service_response, many=True).data

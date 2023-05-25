@@ -45,5 +45,8 @@ class OrganizationService:
 
     @classmethod
     def get_events_by_organization(cls, org_id):
+        """
+        This method returns a list of all the events that belongs to an organization
+        """
         organization = cls.get_organization(id=org_id)
         return EventService.get_events(organization=organization, status="ACTIVE")
