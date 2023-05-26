@@ -12,6 +12,10 @@ def get_ticket_id():
     return "".join(random.choices(string_chr, k=8))
 
 
+def get_currency():
+    return "NGN"
+
+
 class EventCategory(BaseAbstractModel):
     name = models.CharField(max_length=200)
     owner = models.ForeignKey("authentication.User", on_delete=models.CASCADE)
@@ -56,8 +60,8 @@ class Event(BaseAbstractModel):
     event_state = models.CharField(max_length=200, null=True, blank=True)
     event_country = models.CharField(max_length=200, null=True, blank=True)
     address = models.CharField(max_length=250, blank=True, null=True)
-    amount = models.DecimalField(max_digits=19, decimal_places=10, default=0.0)
-    currency = models.CharField(max_length=5, default="NGN", null=True, blank=True)
+    amount = models.DecimalField(max_digits=19, decimal_places=2, default=0.0)
+    currency = models.CharField(max_length=5, default=get_currency)
     event_url = models.URLField(blank=True, null=True)
     rsvp = models.JSONField(default=list, null=True, blank=True)
     # TODO: find a way to capture location, maybe some geolocation stuffs

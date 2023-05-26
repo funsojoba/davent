@@ -48,6 +48,12 @@ class EventService:
                 status_code=status.HTTP_400_BAD_REQUEST,
             )
 
+        if kwargs.get("location").lower() == "onsite" and not kwargs.get("address"):
+            raise CustomApiException(
+                "address is required for on-site event",
+                status_code=status.HTTP_400_BAD_REQUEST,
+            )
+
         return Event.objects.create(
             name=kwargs.get("name"),
             description=kwargs.get("description"),
@@ -68,7 +74,7 @@ class EventService:
             event_city=kwargs.get("event_city"),
             event_country=kwargs.get("event_country"),
             event_state=kwargs.get("event_state"),
-            currency=kwargs.get("currency"),
+            currency=kwargs.get("currency", "NGN"),
         )
 
     @classmethod

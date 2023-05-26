@@ -27,7 +27,7 @@ class UserEventViewSet(viewsets.ViewSet):
     )
     def list(self, request):
         # Get events around a user that is active and valid date
-        # date_value = dateparse.parse_date(date)
+
         today = timezone.now()
         start_date = request.query_params.get("start_date", today)
         event_country = request.query_params.get("event_country", request.user.country)
@@ -53,7 +53,7 @@ class UserEventViewSet(viewsets.ViewSet):
         operation_summary="Register for Event",
         tags=["Event"],
     )
-    @action(detail=False, methods=["post"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/register")
+    @action(detail=False, methods=["POST"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/register")
     def register_event(self, request, pk):
         service_response = EventService.register_event(request.user, pk)
         return Response(
@@ -65,10 +65,21 @@ class UserEventViewSet(viewsets.ViewSet):
         operation_summary="Get Event ticket",
         tags=["Event"],
     )
-    @action(detail=False, methods=["get"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/ticket")
+    @action(detail=False, methods=["GET"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/ticket")
     def event_ticket(self, request, pk):
         service_response = TicketService.get_ticket(user=request.user, event_id=pk)
         return Response(data=serializers.TicketSerializer(service_response).data)
+
+    @swagger_auto_schema(
+        operation_description="Get single event detail",
+        operation_summary="Get single event detail",
+        tags=["Event"],
+    )
+    def retrieve(self, request, pk):
+        service_response = EventService.get_single_event(id=pk)
+        return Response(
+            data=dict(event=serializers.GetEventSerializer(service_response).data)
+        )
 
 
 class AdminEventViewSet(viewsets.ViewSet):
@@ -200,6 +211,17 @@ class AdminEventViewSet(viewsets.ViewSet):
 
         return EventService.send_email_to_users(
             event_id=pk, user=request.user, **serializer_.data
+        )
+
+    @swagger_auto_schema(
+        operation_description="Get single event detail",
+        operation_summary="Get single event detail",
+        tags=["Event"],
+    )
+    def retrieve(self, request, pk):
+        service_response = EventService.get_single_event(id=pk)
+        return Response(
+            data=dict(event=serializers.GetEventSerializer(service_response).data)
         )
 
 

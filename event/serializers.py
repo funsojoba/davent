@@ -85,6 +85,13 @@ class GetEventSerializer(serializers.ModelSerializer):
             "event_dp",
             "location",
             "address",
+            "event_url",
+            "rsvp",
+            "amount",
+            "event_city",
+            "event_country",
+            "event_state",
+            "currency",
         )
 
 
