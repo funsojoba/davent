@@ -32,7 +32,7 @@ class Paystack:
         endpoint = "transaction/initialize"
         payload = {
             "email": email,
-            "amount": amount,
+            "amount": float(amount),
             "reference": cls.generate_reference("EV"),
         }
         try:

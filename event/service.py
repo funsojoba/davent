@@ -96,15 +96,57 @@ class EventService:
         # create ticket for a user for an event
         ticket = generate_ticket_async.delay(event, user, status, expiry_date)
 
+    # PAID EVENTS
     @classmethod
-    def register_event(cls, user, event_id):
+    def initiate_event_payment(cls, user, event_id, amount):
+        from payment.service import PaymentManager
+
+        event_amount = float(event.amount)
+        if amount is None:
+            raise CustomApiException(
+                detail="This event is not free", status_code=status.HTTP_400_BAD_REQUEST
+            )
+        elif float(amount) < event_amount:
+            raise CustomApiException(
+                detail=f"Please input the proper amount - {event.currency}{event_amount}",
+                status_code=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Some financial calculations
+        davent_deduction = 10  # TODO: come up with a formular to calculate this later
+        amount_to_remit = float(amount) - davent_deduction
+
+        # TODO: remit the davent_deduction into davent's Account, maybe in background
+
+        # Initiate paystack payment
+
+        initiate_payment, flag = PaymentManager.initiate_payment(
+            user.email, amount_to_remit, event_id
+        )
+        return initiate_payment.get("response")
+
+    @classmethod
+    def verifiy_event_payment(cls, user, reference, event_id, payment_id, email):
+        from payment.service import PaymentManager
+        from event.tasks import generate_ticket_async
+
+        verified_payment, flag = PaymentManager.verify_payment(
+            reference, event_id, payment_id, email
+        )
+
+        if flag:
+            event = cls.get_single_event(id=event_id)
+            ticket = generate_ticket_async.delay(event, user, status, event.start_date)
+            return verified_payment.get("response")
+
+    @classmethod
+    def register_event(cls, user, event_id, amount=None):
         """
         This method allows a user register for an event
         """
         event = Event.objects.filter(id=event_id).first()
         event.participant.add(user)
         event.save()
-
         cls.generate_event_ticket(
             event, user, status="ACTIVE", expiry_date=event.start_date
         )
