@@ -64,6 +64,9 @@ class Event(BaseAbstractModel):
     currency = models.CharField(max_length=5, default=get_currency)
     event_url = models.URLField(blank=True, null=True)
     rsvp = models.JSONField(default=list, null=True, blank=True)
+    participant_capacity = models.IntegerField(
+        default=0, verbose_name="How many people can register"
+    )
     # TODO: find a way to capture location, maybe some geolocation stuffs
     def __str__(self):
         return self.name

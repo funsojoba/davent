@@ -113,6 +113,13 @@ class EventService:
                 detail="This event is not free", status_code=status.HTTP_400_BAD_REQUEST
             )
 
+        if event.participant_capacity != 0:
+            if event.participant.all().count() >= event.participant_capacity:
+                raise CustomApiException(
+                    detail="This event is sold out",
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                )
+
         event.participant.add(user)
         event.save()
         cls.generate_event_ticket(
