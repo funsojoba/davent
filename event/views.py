@@ -53,9 +53,11 @@ class UserEventViewSet(viewsets.ViewSet):
         operation_summary="Register for Event",
         tags=["Event"],
     )
-    @action(detail=False, methods=["POST"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/register")
+    @action(
+        detail=False, methods=["POST"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/free-register"
+    )
     def register_event(self, request, pk):
-        service_response = EventService.register_event(request.user, pk)
+        service_response = EventService.register_event_free(request.user, pk)
         return Response(
             data=dict(event=serializers.GetEventSerializer(service_response).data)
         )

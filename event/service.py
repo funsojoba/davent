@@ -87,68 +87,36 @@ class EventService:
         return event.participant.all()
 
     @classmethod
-    def generate_event_ticket(cls, event, user, status, expiry_date):
+    def generate_event_ticket(cls, event_id, user_id, status, expiry_date):
         """
         This method generates event ticket for user in background
         """
         from event.tasks import generate_ticket_async
 
         # create ticket for a user for an event
-        ticket = generate_ticket_async.delay(event, user, status, expiry_date)
-
-    # PAID EVENTS
-    @classmethod
-    def initiate_event_payment(cls, user, event_id, amount):
-        from payment.service import PaymentManager
-
-        event_amount = float(event.amount)
-        if amount is None:
-            raise CustomApiException(
-                detail="This event is not free", status_code=status.HTTP_400_BAD_REQUEST
-            )
-        elif float(amount) < event_amount:
-            raise CustomApiException(
-                detail=f"Please input the proper amount - {event.currency}{event_amount}",
-                status_code=status.HTTP_400_BAD_REQUEST,
-            )
-
-        # Some financial calculations
-        davent_deduction = 10  # TODO: come up with a formular to calculate this later
-        amount_to_remit = float(amount) - davent_deduction
-
-        # TODO: remit the davent_deduction into davent's Account, maybe in background
-
-        # Initiate paystack payment
-
-        initiate_payment, flag = PaymentManager.initiate_payment(
-            user.email, amount_to_remit, event_id
-        )
-        return initiate_payment.get("response")
+        ticket = generate_ticket_async.delay(event_id, user_id, status, expiry_date)
 
     @classmethod
-    def verifiy_event_payment(cls, user, reference, event_id, payment_id, email):
-        from payment.service import PaymentManager
-        from event.tasks import generate_ticket_async
-
-        verified_payment, flag = PaymentManager.verify_payment(
-            reference, event_id, payment_id, email
-        )
-
-        if flag:
-            event = cls.get_single_event(id=event_id)
-            ticket = generate_ticket_async.delay(event, user, status, event.start_date)
-            return verified_payment.get("response")
-
-    @classmethod
-    def register_event(cls, user, event_id, amount=None):
+    def register_event_free(cls, user, event_id, amount=None):
         """
         This method allows a user register for an event
         """
         event = Event.objects.filter(id=event_id).first()
+        if event.participant.all().filter(id=user.id).exists():
+            raise CustomApiException(
+                detail="You have already registered for this event",
+                status_code=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if event.event_type == "PAID":
+            raise CustomApiException(
+                detail="This event is not free", status_code=status.HTTP_400_BAD_REQUEST
+            )
+
         event.participant.add(user)
         event.save()
         cls.generate_event_ticket(
-            event, user, status="ACTIVE", expiry_date=event.start_date
+            event.id, user.id, status="ACTIVE", expiry_date=event.start_date
         )
         return event
 
@@ -296,3 +264,47 @@ class EventPaymetService:
 
         if event.event_type == "PAID":
             EventPayment.objects.create(event=event, status="PENDING")
+
+    @classmethod
+    def initiate_event_payment(cls, user, event_id, amount):
+        from payment.service import PaymentManager
+
+        event_amount = float(event.amount)
+        if amount is None:
+            raise CustomApiException(
+                detail="This event is not free", status_code=status.HTTP_400_BAD_REQUEST
+            )
+        elif float(amount) < event_amount:
+            raise CustomApiException(
+                detail=f"Please input the proper amount - {event.currency}{event_amount}",
+                status_code=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Some financial calculations
+        davent_deduction = 10  # TODO: come up with a formular to calculate this later
+        amount_to_remit = float(amount) - davent_deduction
+
+        # TODO: remit the davent_deduction into davent's Account, maybe in background
+
+        # Initiate paystack payment
+
+        initiate_payment, flag = PaymentManager.initiate_payment(
+            user.email, amount_to_remit, event_id
+        )
+        return initiate_payment.get("response")
+
+    @classmethod
+    def verifiy_event_payment(cls, user, reference, event_id, payment_id, email):
+        from payment.service import PaymentManager
+        from event.tasks import generate_ticket_async
+
+        verified_payment, flag = PaymentManager.verify_payment(
+            reference, event_id, payment_id, email
+        )
+
+        if flag:
+            event = cls.get_single_event(id=event_id)
+            ticket = generate_ticket_async.delay(event, user, status, event.start_date)
+            return verified_payment.get("response")
+        else:
+            return verified_payment
