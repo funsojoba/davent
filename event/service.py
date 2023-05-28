@@ -1,5 +1,7 @@
 from typing import List
 from django.db import transaction
+from django.db.models import F
+
 from rest_framework import status
 from helpers.response import Response
 from helpers.permissions import IsAdminUser, IsUser
@@ -75,6 +77,8 @@ class EventService:
             event_country=kwargs.get("event_country"),
             event_state=kwargs.get("event_state"),
             currency=kwargs.get("currency", "NGN"),
+            participant_capacity=kwargs.get("participant_capacity", 0),
+            remaining_slots=kwargs.get("participant_capacity", 0),
         )
 
     @classmethod
@@ -114,14 +118,24 @@ class EventService:
             )
 
         if event.participant_capacity != 0:
-            if event.participant.all().count() >= event.participant_capacity:
-                raise CustomApiException(
-                    detail="This event is sold out",
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                )
+            # NOTE: Handling for race condition
+            with transaction.atomic():
+                # Fetch the event again within the transaction to ensure consistent data
+                event = Event.objects.select_for_update().filter(id=event_id).first()
 
-        event.participant.add(user)
-        event.save()
+                if event.participant.all().count() >= event.participant_capacity:
+                    raise CustomApiException(
+                        detail="This event is sold out",
+                        status_code=status.HTTP_400_BAD_REQUEST,
+                    )
+
+                event.remaining_slots = F("remaining_slots") - 1
+                event.participant.add(user)
+                event.save()
+        else:
+            event.participant.add(user)
+            event.save()
+
         cls.generate_event_ticket(
             event.id, user.id, status="ACTIVE", expiry_date=event.start_date
         )

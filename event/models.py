@@ -67,6 +67,7 @@ class Event(BaseAbstractModel):
     participant_capacity = models.IntegerField(
         default=0, verbose_name="How many people can register"
     )
+    remaining_slots = models.IntegerField(default=0)
     # TODO: find a way to capture location, maybe some geolocation stuffs
     def __str__(self):
         return self.name
