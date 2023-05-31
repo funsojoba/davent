@@ -36,9 +36,9 @@ class UserEventViewSet(viewsets.ViewSet):
 
         if is_valid_date_format(start_date.strftime("%Y-%m-%d")):
             service_response = EventService.get_events().filter(
-                Q(event_state=event_state)
-                | Q(event_country=event_country)
-                | Q(event_city=event_city),
+                # Q(event_state=event_state) |
+                # Q(event_country=event_country) |
+                Q(event_city=event_city),
                 status="ACTIVE",
                 start_date__gte=start_date,
             )
