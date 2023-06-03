@@ -59,7 +59,7 @@ class AuthViewSet(viewsets.ViewSet):
         tags=["Auth"],
         responses=schema_example.COMPLETE_REGISTRATION_RESPONSES,
     )
-    @action(detail=False, methods=["post"], url_path="verify")
+    @action(detail=False, methods=["post"], url_path="verify-otp")
     def verify_user_account(self, request):
         serializer = VerifyAccountSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -87,21 +87,21 @@ class AuthViewSet(viewsets.ViewSet):
         return Response(errors={"error": "User with this email does not exist"})
 
     @swagger_auto_schema(
-        operation_description="Verify Forgot Password",
-        operation_summary="Verify Forgot Password",
+        operation_description="Forgot Password",
+        operation_summary="Forgot Password",
         tags=["Auth"],
         responses=schema_example.COMPLETE_REGISTRATION_RESPONSES,
-        request=ForgotPasswordSerializer,
+        request_body=ForgotPasswordSerializer,
     )
     @action(detail=False, methods=["post"], url_path="verify-forgot-password")
-    def verify_forgot_password(self, request):
+    def verify_forgot_password_view(self, request):
         serializer = VerifyResetPassword(data=request.data)
         serializer.is_valid(raise_exception=True)
-        service_response = UserService.verify_reset_pssword(
+        service_response = UserService.verify_reset_password(
             serializer.data.get("code"), serializer.data.get("email")
         )
         if service_response:
-            return Response(data={"VERIFIED": True})
+            return Response(data={"VERIFIED": True, "email": serializer.data["email"]})
         return Response(errors={"VERIFIED": False})
 
     @swagger_auto_schema(
@@ -116,7 +116,9 @@ class AuthViewSet(viewsets.ViewSet):
         serializer = ResetPasswordSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         service_response = UserService.reset_password(
-            serializer.data.get("password"), serializer.data.get("email")
+            serializer.data.get("password"),
+            serializer.data.get("email"),
+            serializer.data.get("code"),
         )
         if service_response:
             return Response(data={"PASSWORD_RESET": True})

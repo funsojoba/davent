@@ -130,20 +130,22 @@ class UserService:
         return False
 
     @classmethod
-    def verify_reset_pssword(cls, code, email):
+    def verify_reset_password(cls, code, email):
         code = CacheManager.retrieve_key(f"user:reset_password:{code}")
         if code and code.get("email") == email:
+            # NOTE: This delete_key is misbehaving
             CacheManager.delete_key(f"user:reset_password:{code}")
             return True
         return False
 
     @classmethod
-    def reset_password(cls, password, email):
-        if cls.verify_reset_pssword(email, code):
-            pass
-        user = cls.get_user(email=email)
-        password = cls.set_user_password(user, password)
-        return True
+    def reset_password(cls, password, email, code):
+        verify_code = cls.verify_reset_password(code, email)
+        if verify_code:
+            user = cls.get_user(email=email)
+            password = cls.set_user_password(user, password)
+            return True
+        return False
 
     @classmethod
     def login_user(cls, email, password):
