@@ -253,7 +253,7 @@ class TicketService:
         return Ticket.objects.create(
             event=event,
             owner=user,
-            ticket_id=ticket_id,
+            ticket_id=ticket_id.upper(),
             status=status,
             expiry_date=expiry_date,
         )

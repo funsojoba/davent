@@ -2,6 +2,7 @@ import string
 import random
 
 from django.db import models
+from django.utils import timezone
 
 from helpers.db_helper import BaseAbstractModel
 from organization.models import Organization
@@ -83,6 +84,16 @@ class Ticket(BaseAbstractModel):
     ticket_id = models.CharField(max_length=256, default=get_ticket_id)
     status = models.CharField(choices=STATUS, max_length=20)
     expiry_date = models.DateTimeField()
+
+    @property
+    def get_status(self):
+        today = timezone.now()
+        event_end_date = self.event.end_date
+
+        if today > event_end_date:
+            return self.STATUS[1][0]
+        else:
+            return self.STATUS[0][0]
 
 
 class CheckIn(BaseAbstractModel):

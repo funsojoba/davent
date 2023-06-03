@@ -146,7 +146,7 @@ class TicketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ticket
-        fields = ("status", "event", "owner", "ticket_id", "expiry_date")
+        fields = ("get_status", "ticket_id", "expiry_date", "event", "owner")
 
 
 class SendEmailSerializer(serializers.Serializer):
