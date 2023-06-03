@@ -142,6 +142,8 @@ class TicketSerializer(serializers.ModelSerializer):
             "location": obj.event.location,
             "currency": obj.event.currency,
             "amount": obj.event.amount,
+            "address": obj.event.address,
+            "event_url": obj.event.event_url,
         }
 
     class Meta:

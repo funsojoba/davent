@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;500&display=swap" rel="stylesheet">
+    <link href="Recoleta-RegularDEMO.otf" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="image">
+                <img src="https://res.cloudinary.com/ddl2pf4qh/image/upload/v1685828055/davent/logo_dark_uq5nzj.png" alt="Davent Logo">
+            </div>
+        </div>
+
+        <h1>{{event_name}}</h1>
+        <br>
+
+        <table style="font-family: sans-serif;">
+            <thead>
+                <td>Exp. Date</td>
+                <td>Event Type</td>
+                <td>Ticket No.</td>
+            </thead>
+            <tbody class="table-body">
+                <tr>
+                  <td>{{expiry_date | date:"F d, Y H:i:s"}}</td>
+                  <td>{{event_type}}</td>
+                  <td>{{ticket_number}}</td>
+
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="info">
+            <p>
+                Event name : <b> {{event_name}}</br> <br/>
+                Start date : <b> {{event_date}}</br> <br/>
+                Event type : <b> {{event_type}}</br> <br/>
+                Location : <b> {{event_location}}</br> <br/>
+                Event URL : <a href="{{event_url}}" >{{event_url}}</a>  <br/>
+                {% if event_address %}
+                    Address : <b> {{evenet_address}}</br>
+                {% endif %}
+
+                {% if rsvp %}
+                    RSVP : <b>{{", ".join(rsvp)}} </b>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer">
+            <table>
+                <tr>
+                    <td>
+                        <div class="image">
+                            <div><img src="https://res.cloudinary.com/ddl2pf4qh/image/upload/v1685833419/davent/Logo_D_gti4fc.png"/></div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="footer-text">
+                            <a href="{{base_url}}">{{base_url}}</a>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </footer>
+</body>
+</html>

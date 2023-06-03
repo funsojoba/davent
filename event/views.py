@@ -15,6 +15,7 @@ from . import serializers
 from authentication.serializers import UserSerializer
 
 from helpers.response import paginate_response
+from helpers.event_ticket import download_as_pdf_view
 
 from django.shortcuts import render
 
@@ -73,6 +74,62 @@ class UserEventViewSet(viewsets.ViewSet):
     def event_ticket(self, request, pk):
         service_response = TicketService.get_ticket(user=request.user, event_id=pk)
         return Response(data=serializers.TicketSerializer(service_response).data)
+
+    @swagger_auto_schema(
+        operation_description="Get Event ticket",
+        operation_summary="Get Event ticket",
+        tags=["Event"],
+    )
+    @action(detail=False, methods=["GET"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/ticket-pdf")
+    def event_ticket_pdf_view(self, request, pk):
+        service_response = TicketService.get_ticket(user=request.user, event_id=pk)
+        ticket_q = serializers.TicketSerializer(service_response).data
+        context = {}
+
+        context["event_name"] = ticket_q.get("event").get("name")
+        context["expiry_date"] = ticket_q.get("expiry_date")
+        context["event_type"] = ticket_q.get("event").get("event_type")
+        context["ticket_number"] = ticket_q.get("ticket_id")
+        context["event_date"] = ticket_q.get("event").get("start_date")
+        context["event_location"] = ticket_q.get("event").get("location")
+        context["event_url"] = ticket_q.get("event").get("event_url")
+        context["event_address"] = ticket_q.get("event").get("event_address")
+        context["rsvp"] = ticket_q.get("event").get("rsvp")
+        """
+        "data": {
+            "get_status": "ACTIVE",
+            "ticket_id": "asPiKmAaHvY",
+            "expiry_date": "2023-06-17T00:18:09.610681Z",
+            "event": {
+                "id": "5878a128c5bb472ab2bd058a63ab88c0",
+                "name": "Guiness World Record",
+                "start_date": "2023-06-17T00:18:09.610681Z",
+                "end_date": "2023-06-09T00:18:09.610681Z",
+                "event_type": "FREE",
+                "status": "ACTIVE",
+                "location": "ONSITE",
+                "currency": "NGN",
+                "amount": 0.0
+            },
+            "owner": {
+                "first_name": "Dotun",
+                "last_name": "Arofolo",
+                "email": "dotun.arofolo@gmail.com",
+                "phone_number": "+234798276362",
+                "city": "lekki",
+                "state": "lagos",
+                "country": "Nigeria",
+                "user_type": "USER",
+                "avatar": ""
+            }
+        }
+        """
+        pdf_file = download_as_pdf_view(
+            context=context, template_path="ticket_pdf.html"
+        )
+        response = HttpResponse(result.getvalue(), content_type="application/pdf")
+        response["Content-Disposition"] = 'attachment; filename="ticket.pdf"'
+        return response
 
     @swagger_auto_schema(
         operation_description="Get single event detail",

@@ -8,6 +8,7 @@ COPY ./requirements.txt .
 
 RUN apt-get update \
     && apt-get install gcc python-dev libpq-dev postgresql-client -y \
+    && apt-get install wkhtmltopdf \
     && apt-get clean
 
 RUN pip install --upgrade pip \
