@@ -1,29 +1,15 @@
 {% extends "base.html" %}
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <style>
+{% block content %}
+    <h2>Message from {{event_name}}</h2>
+    <p>
+        Hi there,
+    </p>
+    <p>
+        {{message}}
+    </p>
 
-
-    </style>
-</head>
-
-<body>
-        {% block content %}
-            <h2>Message from {{event_name}}</h2>
-            <p>
-                Hi there,
-            </p>
-            <p>
-                {{message}}
-            </p>
-
-            <a class="button-link" href="{{link}}">test link</a>
+    <a class="button-link" href="{{link}}">test link</a>
 
 
-        {% endblock %}
-
-</body>
-
-</html>
+{% endblock %}

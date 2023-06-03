@@ -20,6 +20,8 @@ from .serializers import (
 from .service import UserService
 from .docs import schema_example
 
+from django.shortcuts import render
+
 
 class AuthViewSet(viewsets.ViewSet):
     @swagger_auto_schema(
@@ -191,3 +193,7 @@ class UserAdminViewSet(viewsets.ViewSet):
         service_response = UserService.get_all_users()
         serializer = UserSerializer(service_response)
         return Response(data=serializer.data)
+
+
+def view_template(request):
+    return render(request, template_name="forgot_password.html")

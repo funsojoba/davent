@@ -264,4 +264,4 @@ class EventCategoryViewSet(viewsets.ViewSet):
 
 
 def view_template(request):
-    return render(request, template_name="event_registration.html")
+    return render(request, template_name="user_reminder.html")

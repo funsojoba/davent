@@ -139,6 +139,8 @@ class UserService:
 
     @classmethod
     def reset_password(cls, password, email):
+        if cls.verify_reset_pssword(email, code):
+            pass
         user = cls.get_user(email=email)
         password = cls.set_user_password(user, password)
         return True

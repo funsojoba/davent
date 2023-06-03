@@ -1,64 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <style>
-        @font-face {
-            font-family: 'Roboto';
-            src: url(https://fonts.gstatic.com/s/roboto/v27/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2) format('woff2');
-        }
 
-        *{
-            font-family: 'Roboto';
-        }
-        body {
-            background-color: #EFF3FB;
-        }
+{% block content %}
+    <h2>Hi {{first_name}}!</h2>
+    <p>
+        How's it going? You remembered when you registered for <b>{{event_name}}</b> right?
+        Yeah, we wanna let you know that the event is happening <b>{{event_day}}</b>, just to remind you.
+    </p>
 
-        .wrapper {
-            padding: 20px;
-            background: #fff;
-            max-width: 550px;
-            margin: auto;
-        }
+    <p>See ya! 👍</p>
 
-        .reset_button a{
-            display: inline-block;
-            padding:15px 25px;
-            background-image: linear-gradient(to top, #A130E2 100%, #4318FF 0%);
-            color: #fff;
-            text-align: center;
-            text-decoration: none;
-        }
-
-        .reset_link{
-            background: #EFF3FB;
-            padding:10px;
-            color: #4318FF;
-            margin-bottom: 30px;
-        }
-
-    </style>
-</head>
-
-<body>
-    <div class="wrapper">
-
-        <h2>Message from {{event_name}}</h2>
-        <p>
-            Hi,
-        </p>
-        <p>
-            {{message}}
-        </p>
-
-        {% if link %}
-        <div class="reset_button">
-            <a href="{{link}}">{{link_text}}</a>
-        </div>
+    <p>
+        Further information will be provided as at when due, see you around.
+    </p>
+    <p>
+        Event name : <b> {{event_name}}</b> <br/>
+        Start date : <b> {{event_date}}</b> <br/>
+        Event type : <b> {{event_type}}</b> <br/>
+        Location : <b> {{event_location}}</b> <br/>
+        Event URL : <a href="{{event_url}}" >{{event_url}}</a>  <br/>
+        {% if event_address %}
+            Address : {{evenet_address}}
         {% endif %}
-    </div>
+    </p>
 
-</body>
+    {% if rsvp %}
+    <p>
+        <b>RSVP :</b> {{rsvp}}
+    </p>
+    {% endif %}
 
-</html>
+{% endblock %}

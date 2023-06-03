@@ -1,47 +1,33 @@
 {% extends "base.html" %}
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <style>
+{% block content %}
+    <h2>Way to go {{first_name}}</h2>
+    <p>
+        Congratulations, this is to notify you that you have successfully registered for
+        {{event_name}}, we are glad you made this decision and know you will have a
+        wonderful time. Below is the detail information of the event and a link to your ticket.
+    </p>
 
+    <p>
+        Further information will be provided as at when due, see you around.
+    </p>
+    <p>
+        Event name :  {{event_name}} <br/>
+        Start date : {{event_date}} <br/>
+        Event type : {{event_type}} <br/>
+        Location : {{event_location}} <br/>
+        Event URL : <a href="{{event_url}}" >{{event_url}}</a>  <br/>
+        {% if event_address %}
+            Address : {{evenet_address}}
+        {% endif %}
+    </p>
 
-    </style>
-</head>
+    <a class="button-link" href="{{ticket_link}}">Get Ticket</a>
 
-<body>
-        {% block content %}
-            <h2>Way to go {{first_name}}</h2>
-            <p>
-                Congratulations, this is to notify you that you have successfully registered for
-                {{event_name}}, we are glad you made this decision and know you will have a
-                wonderful time. Below is the detail information of the event and a link to your ticket.
-            </p>
+    {% if rsvp %}
+    <p>
+        <b>RSVP :</b> {{rsvp}}
+    </p>
+    {% endif %}
 
-            <p>
-                Further information will be provided as at when due, see you around.
-            </p>
-            <p>
-                Event name :  {{event_name}} <br/>
-                Start date : {{event_date}} <br/>
-                Event type : {{event_type}} <br/>
-                Location : {{event_location}} <br/>
-                Event URL : <a href="{{event_url}}" >{{event_url}}</a>  <br/>
-                {% if event_address %}
-                    Address : {{evenet_address}}
-                {% endif %}
-            </p>
-
-            <a class="button-link" href="{{ticket_link}}">Get Ticket</a>
-
-            {% if rsvp %}
-            <p>
-                <b>RSVP :</b> {{rsvp}}
-            </p>
-            {% endif %}
-
-        {% endblock %}
-
-</body>
-
-</html>
+{% endblock %}
