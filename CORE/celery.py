@@ -14,12 +14,12 @@ app.config_from_object(settings, namespace="CELERY")
 app.autodiscover_tasks()
 
 
-# app.conf.beat_schedule = {
-#     "run-update-old-event-status-every-24-hours": {
-#         "task": "task.update-old-event-status",
-#         "schedule": crontab(day_of_week="0-6", hour=11, minute=00),
-#     }
-# }
+app.conf.beat_schedule = {
+    "run-update-old-event-status-every-24-hours": {
+        "task": "task.update-old-event-status",
+        "schedule": crontab(day_of_week="0-6", hour=11, minute=00),
+    }
+}
 
 
 # TODO: Send reminder to users for an event, 5 days, 3 days and 1 day togo

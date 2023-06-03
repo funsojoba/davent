@@ -1,63 +1,28 @@
+{% extends "base.html" %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <style>
-        @font-face {
-            font-family: 'Roboto';
-            src: url(https://fonts.gstatic.com/s/roboto/v27/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2) format('woff2');
-        }
 
-        *{
-            font-family: 'Roboto';
-        }
-        body {
-            background-color: #EFF3FB;
-        }
-
-        .wrapper {
-            padding: 20px;
-            background: #fff;
-            max-width: 550px;
-            margin: auto;
-        }
-
-        .reset_button a{
-            display: inline-block;
-            padding:15px 25px;
-            background-image: linear-gradient(to top, #A130E2 100%, #4318FF 0%);
-            color: #fff;
-            text-align: center;
-            text-decoration: none;
-        }
-
-        .reset_link{
-            background: #EFF3FB;
-            padding:10px;
-            color: #4318FF;
-            margin-bottom: 30px;
-        }
 
     </style>
 </head>
 
 <body>
-    <div class="wrapper">
+        {% block content %}
+            <h2>Message from {{event_name}}</h2>
+            <p>
+                Hi there,
+            </p>
+            <p>
+                {{message}}
+            </p>
 
-        <h2>Message from {{event_name}}</h2>
-        <p>
-            Hi,
-        </p>
-        <p>
-            {{message}}
-        </p>
+            <a class="button-link" href="{{link}}">test link</a>
 
-        {% if link %}
-        <div class="reset_button">
-            <a href="{{link}}">{{link_text}}</a>
-        </div>
-        {% endif %}
-    </div>
+
+        {% endblock %}
 
 </body>
 

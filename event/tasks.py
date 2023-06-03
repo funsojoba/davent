@@ -15,7 +15,7 @@ def generate_ticket_async(event_id, user_id, status, expiry_date):
     TicketService.create_ticket(event, user, status, expiry_date)
 
 
-@shared_task(name="update-old-event-status")
+@shared_task(name="task.update-old-event-status")
 def update_old_event_status():
     """
     This task method looks through the database for events that are expired and update their status accordingly

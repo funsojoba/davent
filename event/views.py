@@ -16,6 +16,8 @@ from authentication.serializers import UserSerializer
 
 from helpers.response import paginate_response
 
+from django.shortcuts import render
+
 
 class UserEventViewSet(viewsets.ViewSet):
     permission_classes = [IsUser | IsAdminUser]
@@ -259,3 +261,7 @@ class EventCategoryViewSet(viewsets.ViewSet):
         ).data
 
         return Response(data=dict(event_category=serializer))
+
+
+def view_template(request):
+    return render(request, template_name="event_registration.html")

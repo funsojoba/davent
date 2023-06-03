@@ -35,6 +35,8 @@ schema_view = get_schema_view(
     permission_classes=[permissions.AllowAny],
 )
 
+from event.views import view_template
+
 
 urlpatterns = [
     path(
@@ -43,6 +45,7 @@ urlpatterns = [
         name="schema-swagger-ui",
     ),
     path("admin/", admin.site.urls),
+    path("template/", view_template),
     path("api/v1/auth/", include("authentication.urls")),
     path("api/v1/organization/", include("organization.urls")),
     path("api/v1/event/", include("event.urls")),
