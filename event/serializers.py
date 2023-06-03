@@ -120,11 +120,29 @@ class UodateEventSerializer(serializers.Serializer):
     event_dp = serializers.CharField(required=False)
     location = serializers.CharField(required=False)
     address = serializers.CharField(required=False)
+    event_city = serializers.CharField(required=False)
+    event_country = serializers.CharField(required=False)
+    event_state = serializers.CharField(required=False)
+    rsvp = serializers.JSONField(required=False)
+    currency = serializers.CharField(required=False)
 
 
 class TicketSerializer(serializers.ModelSerializer):
     owner = UserSerializer()
-    event = GetEventSerializer()
+    event = serializers.SerializerMethodField()
+
+    def get_event(self, obj):
+        return {
+            "id": obj.event.id,
+            "name": obj.event.name,
+            "start_date": obj.event.start_date,
+            "end_date": obj.event.end_date,
+            "event_type": obj.event.event_type,
+            "status": obj.event.status,
+            "location": obj.event.location,
+            "currency": obj.event.currency,
+            "amount": obj.event.amount,
+        }
 
     class Meta:
         model = Ticket

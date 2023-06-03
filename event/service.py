@@ -72,7 +72,7 @@ class EventService:
             address=kwargs.get("address", ""),
             event_url=kwargs.get("event_url"),
             rsvp=kwargs.get("rsvp"),
-            amount=kwargs.get("amount"),
+            amount=kwargs.get("amount", 0),
             event_city=kwargs.get("event_city"),
             event_country=kwargs.get("event_country"),
             event_state=kwargs.get("event_state"),
@@ -204,6 +204,11 @@ class EventService:
         event.event_dp = kwargs.get("event_dp") or event.event_dp
         event.location = kwargs.get("location") or event.location
         event.address = kwargs.get("address") or event.address
+        event.event_city = kwargs.get("event_city") or event.event_city
+        event.event_country = kwargs.get("event_country") or event.event_country
+        event.event_state = kwargs.get("event_state") or event.event_state
+        event.rsvp = kwargs.get("rsvp") or event.rsvp
+        event.currency = kwargs.get("currency") or event.currency
 
         event.save()
         return event
