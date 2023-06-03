@@ -12,13 +12,13 @@
         Further information will be provided as at when due, see you around.
     </p>
     <p>
-        Event name :  {{event_name}} <br/>
-        Start date : {{event_date}} <br/>
-        Event type : {{event_type}} <br/>
-        Location : {{event_location}} <br/>
+        Event name : <b> {{event_name}}</br> <br/>
+        Start date : <b> {{event_date}}</br> <br/>
+        Event type : <b> {{event_type}}</br> <br/>
+        Location : <b> {{event_location}}</br> <br/>
         Event URL : <a href="{{event_url}}" >{{event_url}}</a>  <br/>
         {% if event_address %}
-            Address : {{evenet_address}}
+            Address : <b> {{evenet_address}}</br>
         {% endif %}
     </p>
 
@@ -30,4 +30,5 @@
     </p>
     {% endif %}
 
+    <div class="space"></div>
 {% endblock %}

@@ -132,6 +132,22 @@ class EventService:
                 event.remaining_slots = F("remaining_slots") - 1
                 event.participant.add(user)
                 event.save()
+
+                context = {
+                    "event_name": even.name,
+                    "first_name": user.first_name,
+                    "event_type": event.event_type,
+                    "event_location": event.location,
+                    "event_address": event.address,
+                    "ticket_link": "https://www.davent.com/event/1e832oise",
+                    "rsvp": ", ".join(event.rsvp) if event.rsvp else None,
+                }
+                EmailService.send_async(
+                    "event_registration.html",
+                    "Event Registration",
+                    [email],
+                    context=context,
+                )
         else:
             event.participant.add(user)
             event.save()
