@@ -41,7 +41,7 @@ class UserService:
             86400,
         )
         EmailService.send_async(
-            template="complete_signup.html",
+            template="verify_signup.html",
             subject="Verify Account",
             recipients=[user.email],
             context={"first_name": user.first_name, "otp": otp},
@@ -63,6 +63,24 @@ class UserService:
         user = User.objects.filter(email=email).first()
         user.is_active = True
         user.save()
+
+    @classmethod
+    def verify_signed_up_user(cls, email, otp):
+        cached_info = cache_info = CacheManager.retrieve_key(f"user:otp:{otp}")
+        if cache_info and cache_info.get("email") == email:
+            cls.activate_user(email)
+            CacheManager.delete_key(f"user:reset_password:{otp}")
+            user = cls.get_user(email=email)
+            EmailService.send_async(
+                "complete_signup.html",
+                "Welcome Onboard",
+                [email],
+                {
+                    "first_name": user.first_name.capitalize(),
+                },
+            )
+            return True
+        return False
 
     @classmethod
     def set_user_password(cls, user, password):

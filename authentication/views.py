@@ -15,6 +15,7 @@ from .serializers import (
     LoginUserSerializer,
     UpdateUserSerializer,
     UserAvatarSerializer,
+    ActivateUserSerializer,
 )
 
 from .service import UserService
@@ -139,6 +140,24 @@ class AuthViewSet(viewsets.ViewSet):
             serializer.data.get("email"), serializer.data.get("password")
         )
         return service_response
+
+    @swagger_auto_schema(
+        operation_description="Activate User",
+        operation_summary="Activate User",
+        tags=["Auth"],
+        request_body=ActivateUserSerializer,
+    )
+    @action(detail=False, methods=["post"], url_path="verify-user")
+    def activate_user_view(self, request):
+        serializer = ActivateUserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        service_response = UserService.verify_signed_up_user(
+            serializer.data.get("email"), serializer.data.get("otp")
+        )
+        if service_response:
+            return Response(data={"verified": True})
+        return Response(data={"verified": False})
 
 
 class UserViewset(viewsets.ViewSet):

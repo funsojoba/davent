@@ -87,3 +87,8 @@ class UpdateUserSerializer(serializers.ModelSerializer):
 
 class UserAvatarSerializer(serializers.Serializer):
     avatar = serializers.FileField()
+
+
+class ActivateUserSerializer(serializers.Serializer):
+    otp = serializers.CharField()
+    email = serializers.EmailField()
