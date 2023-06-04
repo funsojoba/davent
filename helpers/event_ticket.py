@@ -30,11 +30,11 @@ def download_as_pdf_view(context, template_path):
     <style>
         @font-face {
         font-family: Montserrat;
-        src:local(f'os.path.join(settings.BASE_DIR, "transaction.css")')
+        src:local(f'os.path.join(settings.BASE_DIR, "ticket.css")')
     }
 """
     # add style from css file. please change to your css file path.
-    css_path = os.path.join(settings.BASE_DIR, "transaction.css")
+    css_path = os.path.join(settings.BASE_DIR, "ticket.css")
     with open(css_path, "r") as f:
         new_header += f.read()
     new_header += "\n</style>"
