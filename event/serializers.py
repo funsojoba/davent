@@ -155,4 +155,3 @@ class SendEmailSerializer(serializers.Serializer):
     subject = serializers.CharField()
     message = serializers.CharField()
     link = serializers.CharField(required=False)
-    link_text = serializers.CharField(required=False)

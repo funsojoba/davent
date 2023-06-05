@@ -18,6 +18,11 @@ from helpers.response import paginate_response
 from helpers.event_ticket import download_as_pdf_view
 
 from django.shortcuts import render
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from weasyprint import HTML
+
+import tempfile
 
 
 class UserEventViewSet(viewsets.ViewSet):
@@ -124,11 +129,29 @@ class UserEventViewSet(viewsets.ViewSet):
             }
         }
         """
-        pdf_file = download_as_pdf_view(
-            context=context, template_path="ticket_pdf.html"
+        # pdf_file = download_as_pdf_view(
+        #     context=context, template_path="ticket_pdf.html"
+        # )
+        # response = HttpResponse(result.getvalue(), content_type="application/pdf")
+        # response["Content-Disposition"] = 'attachment; filename="ticket.pdf"'
+        # return response
+        rendered_html = render_to_string("ticket_pdf.html", context=context)
+
+        # Create a PDF object using WeasyPrint
+        pdf = HTML(string=rendered_html).write_pdf()
+
+        # Create an HTTP response with the PDF file
+        response = HttpResponse(pdf, content_type="application/pdf")
+        response["Content-Disposition"] = (
+            "filename=" + context["ticket_number"] + '"_ticket.pdf"'
         )
-        response = HttpResponse(result.getvalue(), content_type="application/pdf")
-        response["Content-Disposition"] = 'attachment; filename="ticket.pdf"'
+        response["Content-Transfer-Encoding"] = "binary"
+
+        with tempfile.NamedTemporaryFile(dele=True) as output:
+            output.write(pdf)
+            output.flush()
+            output = open(output.name, "rb")
+            response.write(output.read())
         return response
 
     @swagger_auto_schema(
@@ -322,3 +345,16 @@ class EventCategoryViewSet(viewsets.ViewSet):
 
 def view_template(request):
     return render(request, template_name="user_reminder.html")
+
+
+def generate_pdf(request):
+    # Render the template to HTML
+    rendered_html = render_to_string("ticket_pdf.html", {"context": your_context_data})
+
+    # Create a PDF object using WeasyPrint
+    pdf = HTML(string=rendered_html).write_pdf()
+
+    # Create an HTTP response with the PDF file
+    response = HttpResponse(pdf, content_type="application/pdf")
+    response["Content-Disposition"] = 'filename="your_pdf_file.pdf"'
+    return response

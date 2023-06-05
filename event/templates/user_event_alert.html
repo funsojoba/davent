@@ -8,8 +8,18 @@
     <p>
         {{message}}
     </p>
+    <div class="space"></div>
 
-    <a class="button-link" href="{{link}}">test link</a>
+    {% if link_text %}
+        <small>Please copy </small>
+        <div class="reset_link">
+        {{ link_text}}
+        </div>
+    {% endif %}
+
+    {% if link %}
+        <a class="button-link" href="{{link}}">CLick</a>
+    {% endif %}
 
     <div class="space"></div>
 {% endblock %}

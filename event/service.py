@@ -214,9 +214,7 @@ class EventService:
         return event
 
     @classmethod
-    def send_email_to_users(
-        cls, event_id, user, subject, message, link: str = None, link_text: str = None
-    ):
+    def send_email_to_users(cls, event_id, user, subject, message, link: str = None):
         event = cls.get_single_event(id=event_id)
         users = event.participant.all()
 
@@ -225,7 +223,7 @@ class EventService:
             "event_name": event.name,
             "message": message,
             "link": link,
-            "link_text": link_text,
+            "link_text": link,
         }
 
         # TODO: this is throwing template not found error

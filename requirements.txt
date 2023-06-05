@@ -86,3 +86,7 @@ drf_yasg
 django-redis
 whitenoise
 pdfkit
+weasyprint
+reportlab
+weasyprint
+django-weasyprint

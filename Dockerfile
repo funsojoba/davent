@@ -9,6 +9,7 @@ COPY ./requirements.txt .
 RUN apt-get update \
     && apt-get install gcc python-dev libpq-dev postgresql-client -y \
     && apt-get install wkhtmltopdf -y \
+    && apt-get install python3-cffi python3-brotli libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0 \
     && apt-get clean
 
 RUN pip install --upgrade pip \
