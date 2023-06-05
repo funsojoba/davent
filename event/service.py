@@ -117,6 +117,18 @@ class EventService:
                 detail="This event is not free", status_code=status.HTTP_400_BAD_REQUEST
             )
 
+        context = {
+            "event_name": event.name,
+            "event_date": event.start_date,
+            "first_name": user.first_name,
+            "event_type": event.event_type,
+            "event_location": event.location,
+            "event_address": event.address,
+            "event_url": f"https://www.davent.com/event/{event.id}",
+            "ticket_link": "https://www.davent.com/event/1e832oise",
+            "rsvp": ", ".join(event.rsvp) if event.rsvp else None,
+        }
+
         if event.participant_capacity != 0:
             # NOTE: Handling for race condition
             with transaction.atomic():
@@ -133,24 +145,23 @@ class EventService:
                 event.participant.add(user)
                 event.save()
 
-                context = {
-                    "event_name": even.name,
-                    "first_name": user.first_name,
-                    "event_type": event.event_type,
-                    "event_location": event.location,
-                    "event_address": event.address,
-                    "ticket_link": "https://www.davent.com/event/1e832oise",
-                    "rsvp": ", ".join(event.rsvp) if event.rsvp else None,
-                }
                 EmailService.send_async(
                     "event_registration.html",
                     "Event Registration",
-                    [email],
+                    [user.email],
                     context=context,
                 )
         else:
             event.participant.add(user)
             event.save()
+
+            # TODO: Move this to generate_ticket task when PDF ticket is figured out, same for the paid event above
+            EmailService.send_async(
+                "event_registration.html",
+                "Event Registration",
+                [user.email],
+                context=context,
+            )
 
         cls.generate_event_ticket(
             event.id, user.id, status="ACTIVE", expiry_date=event.start_date

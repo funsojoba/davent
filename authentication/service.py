@@ -173,7 +173,7 @@ class UserService:
             user_password = check_password(password, user.password)
 
             if not user_password:
-                return Response(errors={"error": "incorrect password"})
+                return Response(errors={"error": "incorrect email/password"})
 
             token = RefreshToken.for_user(user)
             data = {

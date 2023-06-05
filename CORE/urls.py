@@ -35,7 +35,7 @@ schema_view = get_schema_view(
     permission_classes=[permissions.AllowAny],
 )
 
-from authentication.views import view_template
+from event.views import view_template
 
 
 urlpatterns = [
