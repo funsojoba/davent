@@ -56,7 +56,7 @@ class EventService:
                 status_code=status.HTTP_400_BAD_REQUEST,
             )
 
-        return Event.objects.create(
+        event_created = Event.objects.create(
             name=kwargs.get("name"),
             description=kwargs.get("description"),
             start_date=kwargs.get("start_date"),
@@ -80,6 +80,23 @@ class EventService:
             participant_capacity=kwargs.get("participant_capacity", 0),
             remaining_slots=kwargs.get("participant_capacity", 0),
         )
+        context = {
+            "organization_name": organization.name,
+            "event_name": event_created.name,
+            "event_date": event_created.start_date,
+            "event_type": event_created.event_type,
+            "event_location": event_created.location,
+            "event_url": f"https://www.davent.come/event/{event_created.id}",
+            "event_address": event_created.address if event_created.address else None,
+            "rsvp": event_created.rsvp,
+        }
+        EmailService.send_async(
+            "admin_event_creation.html",
+            "Event Creation",
+            [user.email],
+            context=context,
+        )
+        return event_created
 
     @classmethod
     def get_events(cls, **kwargs):

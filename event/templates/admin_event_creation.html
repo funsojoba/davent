@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Hola {{organization_name}}</h2>
+    <p>
+        How's it going? We wanna inform you that your event has been created and
+        live. We really appreciate your partnership and trust and promise to
+        make the process as seamless as possible. Below is the detail of your event with a
+        sharable link for participants to register.
+    </p>
+
+    <p>
+        If you need any more information, please contact us right away.
+    </p>
+    <div class="detail_block">
+        <p>
+            Event name : <b> {{event_name}}</b> <br/>
+            Start date : <b> {{event_date | date:"F d, Y H:i:s"}}</b> <br/>
+            Event type : <b> {{event_type}}</b> <br/>
+            Location : <b> {{event_location}}</b> <br/>
+            Event URL : <a href="{{event_url}}" >{{event_url}}</a>  <br/>
+            {% if event_address %}
+                Address : <b> {{evenet_address}}</b></br>
+            {% endif %}
+        </p>
+    </div>
+
+
+    {% if rsvp %}
+    <p>
+        <b>RSVP :</b> {{rsvp}}
+    </p>
+    {% endif %}
+
+    <div class="space"></div>
+{% endblock %}

@@ -4,6 +4,7 @@ from rest_framework.decorators import action
 
 from django.db.models import Q
 from django.utils import timezone
+from datetime import timedelta
 
 
 from helpers.permissions import IsAdminUser, IsUser
@@ -344,7 +345,18 @@ class EventCategoryViewSet(viewsets.ViewSet):
 
 
 def view_template(request):
-    return render(request, template_name="event_registration.html")
+    context = {
+        "event_name": "Lion of Juda",
+        "event_date": timezone.now() + timedelta(days=7),
+        "organization_name": "Davent Org.",
+        "event_type": "FREE",
+        "event_location": "ONSITE",
+        "event_address": "VI Event Center",
+        "event_url": f"https://www.davent.com/event/1e832oise",
+        "ticket_link": "https://www.davent.com/event/1e832oise",
+        "rsvp": ", ".join(["+1 (234) 345 33", "+23458392034"]),
+    }
+    return render(request, template_name="admin_event_creation.html", context=context)
 
 
 def generate_pdf(request):
