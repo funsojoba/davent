@@ -73,8 +73,18 @@ class Event(BaseAbstractModel):
     def __str__(self):
         return self.name
 
+    @property
     def get_participant_count(self):
         return self.participant.count()
+
+    @property
+    def get_status(self):
+        status = ""
+        if timezone.now() > self.end_date:
+            status = self.STATUS[1][0]
+        else:
+            status = self.STATUS[0][0]
+        return status
 
 
 class Ticket(BaseAbstractModel):

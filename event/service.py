@@ -163,7 +163,7 @@ class EventService:
                 event.save()
 
                 EmailService.send_async(
-                    "event_registration.html",
+                    "user_event_registration.html",
                     "Event Registration",
                     [user.email],
                     context=context,
@@ -174,7 +174,7 @@ class EventService:
 
             # TODO: Move this to generate_ticket task when PDF ticket is figured out, same for the paid event above
             EmailService.send_async(
-                "event_registration.html",
+                "user_event_registration.html",
                 "Event Registration",
                 [user.email],
                 context=context,
