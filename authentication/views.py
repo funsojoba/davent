@@ -201,10 +201,13 @@ class UserViewset(viewsets.ViewSet):
         serializer_ = UserAvatarSerializer(data=request.data)
         serializer_.is_valid(raise_exception=True)
         print(request.data.get("avatar").file, request.data.get("avatar")._name)
-        service_response = UserService.set_user_avatar(
+        # service_response = UserService.set_user_avatar(
+        #     user=request.user, avatar=request.data.get("avatar")
+        # )
+        service_response = UserService.set_user_avatar_cloudinay(
             user=request.user, avatar=request.data.get("avatar")
         )
-        return Response(data={"Testing": "Tested"})
+        return Response(data=UserSerializer(service_response).data)
 
 
 class UserAdminViewSet(viewsets.ViewSet):

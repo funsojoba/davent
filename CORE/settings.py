@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
+import cloudinary
 import dj_database_url
 from pathlib import Path
 from decouple import config
@@ -177,6 +178,13 @@ CACHES = {
         "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
     }
 }
+
+# Cloudinary Settings
+cloudinary.config(
+    cloud_name=config("CLOUD_NAME", default=""),
+    api_key=config("CLOUDINARY_API_KEY", default=""),
+    api_secret=config("CLOUDINARY_API_SECRET", default=""),
+)
 
 
 # JWT SETTINGS

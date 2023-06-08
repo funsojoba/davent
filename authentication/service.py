@@ -196,3 +196,12 @@ class UserService:
             file_object=avatar.file, file_name=avatar._name
         )
         return user
+
+    @classmethod
+    def set_user_avatar_cloudinay(cls, user, avatar):
+        from helpers.cloudinary import CloudinaryManager
+
+        image_upload = CloudinaryManager.upload_image(avatar, "davent/avatar")
+        user.avatar = image_upload
+        user.save()
+        return user

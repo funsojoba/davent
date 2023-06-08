@@ -21,6 +21,7 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+from event.views import generate_pdf
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -45,6 +46,7 @@ urlpatterns = [
         name="schema-swagger-ui",
     ),
     path("admin/", admin.site.urls),
+    path("ticket-get-pdf", generate_pdf, name="template"),
     path("template/", view_template),
     path("api/v1/auth/", include("authentication.urls")),
     path("api/v1/organization/", include("organization.urls")),

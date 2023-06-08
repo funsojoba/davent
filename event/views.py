@@ -363,7 +363,20 @@ def view_template(request):
 
 def generate_pdf(request):
     # Render the template to HTML
-    rendered_html = render_to_string("ticket_pdf.html", {"context": your_context_data})
+    context = {
+        "event_name": "Lion of Juda",
+        "event_date": timezone.now() + timedelta(days=7),
+        "expiry_date": timezone.now() + timedelta(days=7),
+        "ticket_number": "12uiu39",
+        "organization_name": "Davent Org.",
+        "event_type": "FREE",
+        "event_location": "ONSITE",
+        "event_address": "VI Event Center",
+        "event_url": f"https://www.davent.com/event/1e832oise",
+        "ticket_link": "https://www.davent.com/event/1e832oise",
+        "rsvp": ", ".join(["+1 (234) 345 33", "+23458392034"]),
+    }
+    rendered_html = render_to_string("ticket_pdf.html", context)
 
     # Create a PDF object using WeasyPrint
     pdf = HTML(string=rendered_html).write_pdf()
