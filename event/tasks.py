@@ -16,6 +16,8 @@ def generate_ticket_async(event_id, user_id, status, expiry_date):
 
     TicketService.create_ticket(event, user, status, expiry_date)
 
+    # TODO: Generate PDF, upload to AWS or Cloudinary and send email with link to user
+
 
 @shared_task(name="task.update-old-event-status")
 def update_old_event_status():
@@ -68,6 +70,8 @@ def user_event_reminder():
                 "event_address": event.address if event.address else None,
                 "rsvp": event.rsvp if event.rsvp else None,
             }
+
+            # TODO: only send email to verified email,
             EmailService.send_async(
                 "user_event_registration.html",
                 "Event Registration",

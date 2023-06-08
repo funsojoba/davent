@@ -348,6 +348,8 @@ def view_template(request):
     context = {
         "event_name": "Lion of Juda",
         "event_date": timezone.now() + timedelta(days=7),
+        "expiry_date": timezone.now() + timedelta(days=7),
+        "ticket_number": "12uiu39",
         "organization_name": "Davent Org.",
         "event_type": "FREE",
         "event_location": "ONSITE",
@@ -356,7 +358,7 @@ def view_template(request):
         "ticket_link": "https://www.davent.com/event/1e832oise",
         "rsvp": ", ".join(["+1 (234) 345 33", "+23458392034"]),
     }
-    return render(request, template_name="admin_event_creation.html", context=context)
+    return render(request, template_name="ticket_pdf.html", context=context)
 
 
 def generate_pdf(request):

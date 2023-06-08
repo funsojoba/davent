@@ -9,6 +9,74 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;500&display=swap" rel="stylesheet">
     <link href="Recoleta-RegularDEMO.otf" rel="stylesheet">
     <title>Document</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+        *{
+            font-family: 'Montserrat', sans-serif;
+            box-sizing: border-box;
+            padding:0;
+            margin:0;
+        }
+
+        body {
+            background-color: #EFF3FB;
+        }
+        .container {
+            padding: 20px;
+            background: #fff;
+            max-width: 650px;
+            margin: auto;
+        }
+        .container .header{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            background: url("https://res.cloudinary.com/ddl2pf4qh/image/upload/v1685828058/davent/BG_White_ojilrh.jpg");
+            background-size:cover;
+            margin-bottom:40px;
+        }
+        table{
+            width:100%;
+            margin-bottom:30px;
+        }
+        table thead{
+            background: #F2F2F2;
+        }
+        table td{
+            padding: 10px;
+        }
+
+        .title{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            padding:15px;
+        }
+        h1{
+            display:inline-block;
+            text-align:center;
+        }
+        .image{
+            width:150px;
+        }
+        img{
+            width:100%
+        }
+        .info p{
+            line-height:1.5em;
+        }
+        .footer{
+            background: #F2F2F2;
+            padding:15px;
+            display:flex;
+            justify-content:space-between;
+            margin-top:50px;
+        }
+        .footer .image{
+            width:30px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -17,8 +85,9 @@
                 <img src="https://res.cloudinary.com/ddl2pf4qh/image/upload/v1685828055/davent/logo_dark_uq5nzj.png" alt="Davent Logo">
             </div>
         </div>
-
-        <h1>{{event_name}}</h1>
+        <div class="title">
+            <h1>{{event_name}}</h1>
+        </div>
         <br>
 
         <table style="font-family: sans-serif;">
@@ -29,50 +98,37 @@
             </thead>
             <tbody class="table-body">
                 <tr>
-                  <td>{{expiry_date | date:"F d, Y H:i:s"}}</td>
-                  <td>{{event_type}}</td>
-                  <td>{{ticket_number}}</td>
+                  <td><b>{{expiry_date | date:"F d, Y H:i:s"}}</b></td>
+                  <td><b>{{event_type}}</b></td>
+                  <td><b>{{ticket_number}}</b></td>
 
                 </tr>
             </tbody>
         </table>
 
         <div class="info">
-            <p>
-                Event name : <b> {{event_name}}</br> <br/>
-                Start date : <b> {{event_date}}</br> <br/>
-                Event type : <b> {{event_type}}</br> <br/>
-                Location : <b> {{event_location}}</br> <br/>
-                Event URL : <a href="{{event_url}}" >{{event_url}}</a>  <br/>
+                <p>Event name : <b> {{event_name}}</b> </p>
+                <p>Start date : <b> {{event_date}}</b> </p>
+                <p>Event type : <b> {{event_type}}</b> </p>
+                <p>Location : <b> {{event_location}}</b> </p>
+                <p>Event URL : <a href="{{event_url}}" >{{event_url}}</a>  </p>
                 {% if event_address %}
-                    Address : <b> {{evenet_address}}</br>
+                   <p> Address : <b> {{event_address}}</b></p>
                 {% endif %}
 
                 {% if rsvp %}
-                    RSVP : <b>{{rsvp}} </b>
+                    <p>RSVP : <b>{{rsvp}} </p>
                 {% endif %}
-            </p>
+        </div>
+        <div class="footer">
+            <div class="image">
+                <img src="https://res.cloudinary.com/ddl2pf4qh/image/upload/v1685833419/davent/Logo_D_gti4fc.png"/>
+            </div>
+            <div class="footer-text">
+                <a href="{{base_url}}">davent.com</a>
+            </div>
         </div>
     </div>
 
-    <footer>
-        <div class="footer">
-            <table>
-                <tr>
-                    <td>
-                        <div class="image">
-                            <div><img src="https://res.cloudinary.com/ddl2pf4qh/image/upload/v1685833419/davent/Logo_D_gti4fc.png"/></div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="footer-text">
-                            <a href="{{base_url}}">{{base_url}}</a>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-
-        </div>
-    </footer>
 </body>
 </html>

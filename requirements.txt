@@ -90,3 +90,4 @@ weasyprint
 reportlab
 weasyprint
 django-weasyprint
+django-xhtml2pdf
