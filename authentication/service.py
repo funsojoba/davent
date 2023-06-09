@@ -184,8 +184,8 @@ class UserService:
         return Response(errors={"error": "User does not exist"})
 
     @classmethod
-    def get_all_users(cls):
-        return User.objects.all()
+    def get_all_users(cls, **kwargs):
+        return User.objects.filter(**kwargs)
 
     @classmethod
     def set_user_avatar(cls, user, avatar):

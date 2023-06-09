@@ -4,7 +4,6 @@ import os
 from celery import Celery
 from celery.schedules import crontab
 from django.conf import settings
-from celery.schedules import crontab
 
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "CORE.settings")
@@ -21,6 +20,6 @@ app.conf.beat_schedule = {
     },
     "run-remind-users-of-event": {
         "task": "task.remind-user-of-event",
-        "schedule": crontab(day_of_week="0-6", hour=0, minute=00),
+        "schedule": crontab(day_of_week="0-6", hour=9, minute=00),
     },
 }

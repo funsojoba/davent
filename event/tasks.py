@@ -58,7 +58,7 @@ def user_event_reminder():
         elif difference == timedelta(days=7):
             date = days.get("7")
 
-        for participant in event.participant:
+        for participant in event.participant.all():
             context = {
                 "event_name": event.name,
                 "first_name": participant.first_name,
