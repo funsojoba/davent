@@ -138,9 +138,12 @@ class EventService:
             "event_name": event.name,
             "event_date": event.start_date,
             "first_name": user.first_name,
+            "last_name": user.last_name,
             "event_type": event.event_type,
             "event_location": event.location,
             "event_address": event.address,
+            "participant_city": user.city,
+            "participant_state": user.state,
             "event_url": f"https://www.davent.com/event/{event.id}",
             "ticket_link": "https://www.davent.com/event/1e832oise",
             "rsvp": ", ".join(event.rsvp) if event.rsvp else None,
@@ -162,21 +165,39 @@ class EventService:
                 event.participant.add(user)
                 event.save()
 
+                context["participant_count"] = event.participant.count()
                 EmailService.send_async(
                     "user_event_registration.html",
                     "Event Registration",
                     [user.email],
                     context=context,
                 )
+
+                # Send email to the event admin (event owner)
+                EmailService.send_async(
+                    "admin_event_registration.html",
+                    "Event Registration",
+                    [event.owner.email],
+                    context=context,
+                )
         else:
             event.participant.add(user)
             event.save()
+            context["participant_count"] = event.participant.count()
 
             # TODO: Move this to generate_ticket task when PDF ticket is figured out, same for the paid event above
             EmailService.send_async(
                 "user_event_registration.html",
                 "Event Registration",
                 [user.email],
+                context=context,
+            )
+
+            # Send email to the event admin (event owner)
+            EmailService.send_async(
+                "admin_event_registration.html",
+                "Event Registration",
+                [event.owner.email],
                 context=context,
             )
 

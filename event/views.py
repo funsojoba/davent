@@ -237,7 +237,7 @@ class AdminEventViewSet(viewsets.ViewSet):
         tags=["Event-Admin"],
     )
     @action(detail=False, methods=["post"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/status")
-    def register_event(self, request, pk):
+    def set_event_status(self, request, pk):
 
         serializer = serializers.AdminSetEventStatusSerializer(data=request.data)
         if not serializer.is_valid():

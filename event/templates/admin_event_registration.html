@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Yo, good news 💃!!</h2>
+    <p>
+        You have a new participant for your event <b>{{event_name}}</b>. <b>{{first_name}} {{last_name}} </b> just
+        successfully registered for your event and we are so glad to inform you about it.
+    </p>
+
+    <p>
+        Participant's name : <b> {{first_name}} {{last_name}}</b> <br/>
+        Registered participants count : <b> {{participant_count}}</b> <br/>
+        Participant's city : <b> {{participant_city}}</b> <br/>
+        Participant_state : <b> {{participant_state}}</b> <br/>
+
+    </p>
+
+
+    <div class="space"></div>
+{% endblock %}
