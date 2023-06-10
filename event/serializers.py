@@ -207,6 +207,7 @@ class CheckInSerializer(serializers.Serializer):
 class GetCheckInSerializer(serializers.ModelSerializer):
     event = serializers.CharField()
     user = serializers.CharField()
+    created_by = UserSerializer(read_only=True)
 
     def get_event(self, obj):
         return obj.event.name

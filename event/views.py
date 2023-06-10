@@ -351,20 +351,18 @@ class AdminEventViewSet(viewsets.ViewSet):
         operation_summary="Get checked in users",
         tags=["Event"],
     )
-    @action(detail=False, methods=["GET"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/check-in")
-    def check_in_user(self, request, pk):
-        serializer_data = serializers.CheckInSerializer(data=request.data)
-        if not serializer_data.is_valid():
-            return Response(
-                errors=serializer_data.errors, status=status.HTTP_400_BAD_REQUEST
-            )
+    @action(
+        detail=False, methods=["GET"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/get-check-ins"
+    )
+    def get_checked_in_users(self, request, pk):
         event = EventService.get_single_event(id=pk)
-
-        service_response = CheckInService.check_in(
-            admin=request.user, event=event, **serializer_data.data
+        service_response = CheckInService.get_checked_in_users(
+            created_by=request.user, event=event
         )
         return Response(
-            data=dict(event=serializers.GetCheckInSerializer(service_response).data)
+            data=dict(
+                event=serializers.GetCheckInSerializer(service_response, many=True).data
+            )
         )
 
 

@@ -361,6 +361,10 @@ class CheckInService:
             "User record not found", status_code=status.HTTP_404_NOT_FOUND
         )
 
+    @classmethod
+    def get_checked_in_users(cls, event, created_by):
+        return CheckIn.objects.filter(event=event, created_by=created_by)
+
 
 class TicketService:
     @classmethod
