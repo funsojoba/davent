@@ -107,8 +107,10 @@ class Ticket(BaseAbstractModel):
 
 
 class CheckIn(BaseAbstractModel):
+    TYPE = [("CHEC_IN", "CHECK_IN"), ("CHECK_OUT", "CHECK_OUT")]
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     user = models.ForeignKey("authentication.User", on_delete=models.DO_NOTHING)
+    check_type = models.CharField(max_length=50, choices=TYPE, default=TYPE[0][0])
 
 
 class EventPayment(BaseAbstractModel):

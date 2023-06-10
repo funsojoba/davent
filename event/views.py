@@ -11,7 +11,7 @@ from helpers.permissions import IsAdminUser, IsUser
 from helpers.response import Response
 from helpers.validator import is_valid_date_format
 
-from .service import EventService, EventCategoryService, TicketService
+from .service import EventService, EventCategoryService, TicketService, CheckInService
 from . import serializers
 from authentication.serializers import UserSerializer
 
@@ -154,6 +154,22 @@ class UserEventViewSet(viewsets.ViewSet):
             output = open(output.name, "rb")
             response.write(output.read())
         return response
+
+    @swagger_auto_schema(
+        operation_description="Get user registered events",
+        operation_summary="Get user registered events",
+        tags=["Event"],
+    )
+    @action(detail=False, methods=["GET"], url_path="registered-events")
+    def get_user_registered_event(self, request):
+        service_response = EventService.get_registered_event(request.user)
+        return Response(
+            data=dict(
+                event=serializers.UserRegisteredEventSerializer(
+                    service_response, many=True
+                ).data
+            )
+        )
 
     @swagger_auto_schema(
         operation_description="Get single event detail",

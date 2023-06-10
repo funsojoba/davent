@@ -211,6 +211,20 @@ class EventService:
         return Event.objects.filter(**kwargs).first()
 
     @classmethod
+    def get_registered_event(cls, user):
+        """_summary_
+
+        This method gets a list of events a user has registered for
+
+        Args:
+            user : user instance
+
+        Returns:
+            <list>: list of events
+        """
+        return Event.objects.filter(participant=user)
+
+    @classmethod
     def admin_register_user(cls, user_ids: List[str], event_id):
         """
         this service allows an admin registers multiple users for an event
@@ -228,6 +242,15 @@ class EventService:
 
     @classmethod
     def admin_set_event_status(cls, event_id, status):
+        """this method allows event admin manually set the status of an event to either ACTIVE, EXPIRED or SCHEDULED
+
+        Args:
+            event_id ([str]): event's ID
+            status ([str]): [ACTIVE, EXPIRED, SCHEDULED]
+
+        Returns:
+            [type]: updated event instance
+        """
         event = cls.get_single_event(id=event_id)
         event.status = status
         event.save()
@@ -263,7 +286,19 @@ class EventService:
         return event
 
     @classmethod
-    def send_email_to_users(cls, event_id, user, subject, message, link: str = None):
+    def send_email_to_users(cls, event_id, subject, message, link: str = None):
+        """This method allows event admin send an email to all participant of an event
+            as opposed the automated ones in cases where a piece of information needs to be passed
+
+        Args:
+            event_id ([str]): event's ID
+            subject ([str]): email subject
+            message ([str]): email message
+            link (str, optional): [str / url]. Defaults to None.
+
+        Returns:
+            None: if success, email sent
+        """
         event = cls.get_single_event(id=event_id)
         users = event.participant.all()
 
@@ -289,8 +324,8 @@ class EventService:
 
 class CheckInService:
     @classmethod
-    def check_in(cls, event, user):
-        check_in = CheckIn.object.create(event=event, user=user)
+    def check_in(cls, event, user, check_type):
+        return CheckIn.object.create(event=event, user=user, check_type=check_type)
 
 
 class TicketService:

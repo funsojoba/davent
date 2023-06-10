@@ -95,6 +95,48 @@ class GetEventSerializer(serializers.ModelSerializer):
         )
 
 
+class UserRegisteredEventSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(read_only=True)
+    owner = UserSerializer(read_only=True)
+    category = EventCategorySerializer(read_only=True)
+    organization = OrganizationSerializer(read_only=True)
+    description = serializers.CharField(read_only=True)
+    start_date = serializers.DateTimeField(read_only=True)
+    end_date = serializers.DateTimeField(read_only=True)
+    event_type = serializers.ChoiceField(choices=Event.TYPE, read_only=True)
+    event_banner = serializers.CharField(read_only=True)
+    event_dp = serializers.CharField(read_only=True)
+    status = serializers.ChoiceField(choices=Event.STATUS, read_only=True)
+    location = serializers.ChoiceField(choices=Event.LOCATION, read_only=True)
+    address = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = Event
+        fields = (
+            "id",
+            "name",
+            "description",
+            "start_date",
+            "end_date",
+            "owner",
+            "organization",
+            "status",
+            "event_type",
+            "category",
+            "event_banner",
+            "event_dp",
+            "location",
+            "address",
+            "event_url",
+            "rsvp",
+            "amount",
+            "event_city",
+            "event_country",
+            "event_state",
+            "currency",
+        )
+
+
 class GetEventCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = EventCategory
@@ -155,3 +197,7 @@ class SendEmailSerializer(serializers.Serializer):
     subject = serializers.CharField()
     message = serializers.CharField()
     link = serializers.CharField(required=False)
+
+
+class CheckInSerializer(serializers.Serializer):
+    check_type = serializers.CharField(choices=CheckIn.TYPE)
