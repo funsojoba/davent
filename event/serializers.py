@@ -200,4 +200,20 @@ class SendEmailSerializer(serializers.Serializer):
 
 
 class CheckInSerializer(serializers.Serializer):
-    check_type = serializers.CharField(choices=CheckIn.TYPE)
+    check_type = serializers.ChoiceField(choices=CheckIn.TYPE)
+    query = serializers.CharField(required=True)
+
+
+class GetCheckInSerializer(serializers.ModelSerializer):
+    event = serializers.CharField()
+    user = serializers.CharField()
+
+    def get_event(self, obj):
+        return obj.event.name
+
+    def get_user(self, obj):
+        return obj.user.first_name + " " + obj.user.last_name
+
+    class Meta:
+        model = CheckIn
+        fields = ("id", "created_at", "created_by", "check_type", "user", "event")

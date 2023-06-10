@@ -325,6 +325,48 @@ class AdminEventViewSet(viewsets.ViewSet):
             data=dict(event=serializers.GetEventSerializer(service_response).data)
         )
 
+    @swagger_auto_schema(
+        operation_description="Check in users",
+        operation_summary="Check in users",
+        tags=["Event"],
+    )
+    @action(detail=False, methods=["POST"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/check-in")
+    def check_in_user(self, request, pk):
+        serializer_data = serializers.CheckInSerializer(data=request.data)
+        if not serializer_data.is_valid():
+            return Response(
+                errors=serializer_data.errors, status=status.HTTP_400_BAD_REQUEST
+            )
+        event = EventService.get_single_event(id=pk)
+
+        service_response = CheckInService.check_in(
+            admin=request.user, event=event, **serializer_data.data
+        )
+        return Response(
+            data=dict(event=serializers.GetCheckInSerializer(service_response).data)
+        )
+
+    @swagger_auto_schema(
+        operation_description="Get checked in users",
+        operation_summary="Get checked in users",
+        tags=["Event"],
+    )
+    @action(detail=False, methods=["GET"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/check-in")
+    def check_in_user(self, request, pk):
+        serializer_data = serializers.CheckInSerializer(data=request.data)
+        if not serializer_data.is_valid():
+            return Response(
+                errors=serializer_data.errors, status=status.HTTP_400_BAD_REQUEST
+            )
+        event = EventService.get_single_event(id=pk)
+
+        service_response = CheckInService.check_in(
+            admin=request.user, event=event, **serializer_data.data
+        )
+        return Response(
+            data=dict(event=serializers.GetCheckInSerializer(service_response).data)
+        )
+
 
 class EventCategoryViewSet(viewsets.ViewSet):
     permission_classes = (IsAdminUser,)

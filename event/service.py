@@ -1,6 +1,7 @@
 from typing import List
 from django.db import transaction
-from django.db.models import F
+from django.db.models import F, Q
+from django.http import Http404
 
 from rest_framework import status
 from helpers.response import Response
@@ -324,8 +325,41 @@ class EventService:
 
 class CheckInService:
     @classmethod
-    def check_in(cls, event, user, check_type):
-        return CheckIn.object.create(event=event, user=user, check_type=check_type)
+    def check_in(cls, admin, event, check_type, query):
+        """This function allows admin check in users of an event
+
+        Args:
+            event ([type]): event instance
+            query ([str]): any of user's email, phone, first or last name
+            check_type ([str]): CHECK_IN or CHECK_OUT
+
+        Returns:
+            [CheckIn]: CheckIn instance or 404 if user is not found
+        """
+        user = (
+            UserService.get_all_users()
+            .filter(
+                Q(phone_number=query)
+                | Q(email=query)
+                | Q(first_name__icontains=query)
+                | Q(last_name__icontains=query)
+            )
+            .first()
+        )
+        if user:
+            # Check if user is registered for the event
+            if event.participant.filter(email=user.email).exists():
+                return CheckIn.objects.create(
+                    event=event, user=user, check_type=check_type, created_by=admin
+                )
+            else:
+                raise CustomApiException(
+                    "User is not registered for this event",
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                )
+        raise CustomApiException(
+            "User record not found", status_code=status.HTTP_404_NOT_FOUND
+        )
 
 
 class TicketService:
