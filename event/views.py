@@ -11,7 +11,13 @@ from helpers.permissions import IsAdminUser, IsUser
 from helpers.response import Response
 from helpers.validator import is_valid_date_format
 
-from .service import EventService, EventCategoryService, TicketService, CheckInService
+from .service import (
+    EventService,
+    EventCategoryService,
+    TicketService,
+    CheckInService,
+    AdminDashboardService,
+)
 from . import serializers
 from authentication.serializers import UserSerializer
 
@@ -92,15 +98,15 @@ class UserEventViewSet(viewsets.ViewSet):
         ticket_q = serializers.TicketSerializer(service_response).data
         context = {}
 
-        context["event_name"] = ticket_q.get("event").get("name")
-        context["expiry_date"] = ticket_q.get("expiry_date")
-        context["event_type"] = ticket_q.get("event").get("event_type")
-        context["ticket_number"] = ticket_q.get("ticket_id")
-        context["event_date"] = ticket_q.get("event").get("start_date")
-        context["event_location"] = ticket_q.get("event").get("location")
-        context["event_url"] = ticket_q.get("event").get("event_url")
-        context["event_address"] = ticket_q.get("event").get("event_address")
-        context["rsvp"] = ticket_q.get("event").get("rsvp")
+        # context["event_name"] = ticket_q.get("event").get("name")
+        # context["expiry_date"] = ticket_q.get("expiry_date")
+        # context["event_type"] = ticket_q.get("event").get("event_type")
+        # context["ticket_number"] = ticket_q.get("ticket_id")
+        # context["event_date"] = ticket_q.get("event").get("start_date")
+        # context["event_location"] = ticket_q.get("event").get("location")
+        # context["event_url"] = ticket_q.get("event").get("event_url")
+        # context["event_address"] = ticket_q.get("event").get("event_address")
+        # context["rsvp"] = ticket_q.get("event").get("rsvp")
         """
         "data": {
             "get_status": "ACTIVE",
@@ -136,24 +142,25 @@ class UserEventViewSet(viewsets.ViewSet):
         # response = HttpResponse(result.getvalue(), content_type="application/pdf")
         # response["Content-Disposition"] = 'attachment; filename="ticket.pdf"'
         # return response
-        rendered_html = render_to_string("ticket_pdf.html", context=context)
+        # rendered_html = render_to_string("ticket_pdf.html", context=context)
 
-        # Create a PDF object using WeasyPrint
-        pdf = HTML(string=rendered_html).write_pdf()
+        # # Create a PDF object using WeasyPrint
+        # pdf = HTML(string=rendered_html).write_pdf()
 
-        # Create an HTTP response with the PDF file
-        response = HttpResponse(pdf, content_type="application/pdf")
-        response["Content-Disposition"] = (
-            "filename=" + context["ticket_number"] + '"_ticket.pdf"'
-        )
-        response["Content-Transfer-Encoding"] = "binary"
+        # # Create an HTTP response with the PDF file
+        # response = HttpResponse(pdf, content_type="application/pdf")
+        # response["Content-Disposition"] = (
+        #     "filename=" + context["ticket_number"] + '"_ticket.pdf"'
+        # )
+        # response["Content-Transfer-Encoding"] = "binary"
 
-        with tempfile.NamedTemporaryFile(dele=True) as output:
-            output.write(pdf)
-            output.flush()
-            output = open(output.name, "rb")
-            response.write(output.read())
-        return response
+        # with tempfile.NamedTemporaryFile(dele=True) as output:
+        #     output.write(pdf)
+        #     output.flush()
+        #     output = open(output.name, "rb")
+        #     response.write(output.read())
+        # return response
+        return Response(data={"teting": "testing"})
 
     @swagger_auto_schema(
         operation_description="Get user registered events",
@@ -441,3 +448,11 @@ def generate_pdf(request):
     response = HttpResponse(pdf, content_type="application/pdf")
     response["Content-Disposition"] = 'filename="your_pdf_file.pdf"'
     return response
+
+
+class AdminDashboardView(viewsets.ViewSet):
+    permission_classes = (IsAdminUser,)
+
+    def get(self, request):
+        service_response = AdminDashboardService.get_admin_dashboard(admin=request.user)
+        return Response(data=service_response)

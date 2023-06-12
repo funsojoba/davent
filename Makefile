@@ -5,6 +5,9 @@ SERVICE = web
 up:
 	$(COMPOSE) up
 
+up-build:
+	$(COMPOSE) up --build
+
 build:
 	$(COMPOSE) build
 

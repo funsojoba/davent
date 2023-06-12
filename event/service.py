@@ -17,6 +17,8 @@ from notification.service import EmailService
 
 from helpers.response import Response
 
+from event.serializers import EventCategorySerializer, GetEventSerializer
+
 
 class EventCategoryService:
     @classmethod
@@ -470,3 +472,27 @@ class EventPaymetService:
             return verified_payment.get("response")
         else:
             return verified_payment
+
+
+class AdminDashboardService:
+    @classmethod
+    def get_admin_dashboard(cls, admin):
+        events = Event.objects.filter(created_by=admin)
+        total_event = events.count()
+        total_paid_event = events.filter(event_type="PAID").count()
+        total_free_event = events.filter(event_type="FREE").count()
+
+        return_data = {
+            "events": GetEventSerializer(events, many=True),
+            "total_event": total_event,
+            "total_paid_event": total_paid_event,
+            "total_free_event": total_free_event,
+        }
+
+        return return_data
+
+
+class UserDashboardService:
+    def get_user_dashboard(cls, user):
+        events = Event.objects.filter(participant=user)
+        events_count = events.count()

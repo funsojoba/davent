@@ -62,7 +62,7 @@ def user_event_reminder():
             context = {
                 "event_name": event.name,
                 "first_name": participant.first_name,
-                "event_day": date + ", " + event.start_date.day,
+                "event_day": date + ", " + str(event.start_date.day),
                 "event_date": event.start_date,
                 "event_location": event.location,
                 "event_type": event.event_type,
