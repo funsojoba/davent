@@ -372,6 +372,16 @@ class AdminEventViewSet(viewsets.ViewSet):
             )
         )
 
+    @swagger_auto_schema(
+        operation_description="Get admin dashboard",
+        operation_summary="Get admin dashboard",
+        tags=["Event"],
+    )
+    @action(detail=False, methods=["GET"], url_path="dashboard")
+    def get_admin_dashboard_view(self, request):
+        service_response = AdminDashboardService.get_admin_dashboard(admin=request.user)
+        return Response(data=service_response)
+
 
 class EventCategoryViewSet(viewsets.ViewSet):
     permission_classes = (IsAdminUser,)
@@ -448,11 +458,3 @@ def generate_pdf(request):
     response = HttpResponse(pdf, content_type="application/pdf")
     response["Content-Disposition"] = 'filename="your_pdf_file.pdf"'
     return response
-
-
-class AdminDashboardView(viewsets.ViewSet):
-    permission_classes = (IsAdminUser,)
-
-    def get(self, request):
-        service_response = AdminDashboardService.get_admin_dashboard(admin=request.user)
-        return Response(data=service_response)

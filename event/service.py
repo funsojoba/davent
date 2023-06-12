@@ -477,16 +477,16 @@ class EventPaymetService:
 class AdminDashboardService:
     @classmethod
     def get_admin_dashboard(cls, admin):
-        events = Event.objects.filter(created_by=admin)
+        events = Event.objects.filter(owner=admin)
         total_event = events.count()
         total_paid_event = events.filter(event_type="PAID").count()
         total_free_event = events.filter(event_type="FREE").count()
 
         return_data = {
-            "events": GetEventSerializer(events, many=True),
             "total_event": total_event,
             "total_paid_event": total_paid_event,
             "total_free_event": total_free_event,
+            "events": GetEventSerializer(events, many=True).data,
         }
 
         return return_data
