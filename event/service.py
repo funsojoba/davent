@@ -486,6 +486,9 @@ class AdminDashboardService:
             "total_event": total_event,
             "total_paid_event": total_paid_event,
             "total_free_event": total_free_event,
+            "total_revenue": 0,
+            "total_organization": 0,
+            "organizations": "",
             "events": GetEventSerializer(events, many=True).data,
         }
 
