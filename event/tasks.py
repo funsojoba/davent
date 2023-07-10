@@ -73,7 +73,7 @@ def user_event_reminder():
 
             # TODO: only send email to verified email,
             EmailService.send_async(
-                "user_event_registration.html",
+                "user_event_reminder.html",
                 "Event Registration",
                 [participant.email],
                 context=context,
