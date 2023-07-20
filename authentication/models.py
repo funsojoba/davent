@@ -5,6 +5,8 @@ from helpers.db_helper import BaseAbstractModel
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.base_user import BaseUserManager
 
+# from django_location_field.models import LocationField
+
 
 class UserManager(BaseUserManager):
     def _create_user(self, email, password, **extra_fields):
@@ -38,6 +40,7 @@ class User(BaseAbstractModel, AbstractBaseUser, PermissionsMixin):
     state = models.CharField(max_length=256)
     country = models.CharField(max_length=256)
     user_type = models.CharField(choices=USER_TYPE, max_length=300, default="USER")
+    # user_location = LocationField(blank=True, null=True)
 
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)

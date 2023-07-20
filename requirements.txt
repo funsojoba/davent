@@ -93,3 +93,4 @@ django-weasyprint
 xhtml2pdf
 django-xhtml2pdf
 geoip2
+django-location-field

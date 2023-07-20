@@ -6,6 +6,8 @@ from datetime import timedelta
 from event.service import EventService
 from authentication.service import UserService
 
+from notification.service import EmailService
+
 
 @shared_task()
 def generate_ticket_async(event_id, user_id, status, expiry_date):
@@ -37,7 +39,7 @@ def user_event_reminder():
     """
     This task method is meant to alert users of the event they registered for
     """
-    days = {"7": "next week", "1": "tomorrow"}
+    days = {"1": "tomorrow", "7": "next week"}
 
     events = EventService.get_events()  # get active events
     for event in events:
@@ -50,31 +52,62 @@ def user_event_reminder():
         # for participant in event.event_participant:
         # send email
 
-        difference = today - event.start_date
-        date = ""
+        # Get the amount of days left
+        day_diff = event.start_date.day - today.day
 
-        if difference == timedelta(days=1):
-            date = days.get("1")
-        elif difference == timedelta(days=7):
-            date = days.get("7")
+        # only dealing with a day and a week
+        if day_diff in [1, 7]:
+            event_day = days.get(str(day_diff))
+            # only send the email in a day or a week
+            for participant in event.participant.all():
+                context = {
+                    "event_name": event.name,
+                    "first_name": participant.first_name,
+                    "event_day": event_day,
+                    "event_date": event.start_date,
+                    "event_location": event.location,
+                    "event_type": event.event_type,
+                    "event_url": event.event_url if event.event_url else None,
+                    "event_address": event.address if event.address else None,
+                    "rsvp": ", ".join(event.rsvp) if event.rsvp else None,
+                }
 
-        for participant in event.participant.all():
-            context = {
-                "event_name": event.name,
-                "first_name": participant.first_name,
-                "event_day": date + ", " + str(event.start_date.day),
-                "event_date": event.start_date,
-                "event_location": event.location,
-                "event_type": event.event_type,
-                "event_url": event.event_url if event.event_url else None,
-                "event_address": event.address if event.address else None,
-                "rsvp": event.rsvp if event.rsvp else None,
-            }
+                # TODO: only send email to verified email,
+                EmailService.send_async(
+                    "user_event_reminder.html",
+                    "Event Registration",
+                    [participant.email],
+                    context=context,
+                )
 
-            # TODO: only send email to verified email,
-            EmailService.send_async(
-                "user_event_reminder.html",
-                "Event Registration",
-                [participant.email],
-                context=context,
-            )
+
+def test_email_reminder(event_id):
+    import pdb
+
+    pdb.set_trace()
+    days = {"1": "tomorrow", "7": "next week"}
+    event = EventService.get_single_event(id=event_id)
+    today = timezone.now()
+    day_diff = event.start_date.day - today.day
+
+    event_day = days.get(str(day_diff))
+    for participant in event.participant.all():
+        context = {
+            "event_name": event.name,
+            "first_name": participant.first_name,
+            "event_day": event_day,
+            "event_date": event.start_date,
+            "event_location": event.location,
+            "event_type": event.event_type,
+            "event_url": event.event_url if event.event_url else None,
+            "event_address": event.address if event.address else None,
+            "rsvp": ", ".join(event.rsvp) if event.rsvp else None,
+        }
+
+        # TODO: only send email to verified email,
+        EmailService.send_async(
+            "user_event_reminder.html",
+            "Event Registration",
+            [participant.email],
+            context=context,
+        )

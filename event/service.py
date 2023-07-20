@@ -85,12 +85,12 @@ class EventService:
         )
         context = {
             "organization_name": organization.name,
-            "event_name": event_created.name,
-            "event_date": event_created.start_date,
-            "event_type": event_created.event_type,
-            "event_location": event_created.location,
+            "event_name": kwargs.get("name"),
+            "event_date": kwargs.get("start_date"),
+            "event_type": kwargs.get("event_type"),
+            "event_location": kwargs.get("location"),
             "event_url": f"https://www.davent.come/event/{event_created.id}",
-            "event_address": event_created.address if event_created.address else None,
+            "event_address": kwargs.get("address"),
             "rsvp": event_created.rsvp,
         }
         EmailService.send_async(

@@ -7,6 +7,8 @@ from django.utils import timezone
 from helpers.db_helper import BaseAbstractModel
 from organization.models import Organization
 
+# from django_location_field.models import LocationField
+
 
 def get_ticket_id():
     string_chr = string.ascii_uppercase + string.digits
@@ -14,6 +16,7 @@ def get_ticket_id():
 
 
 def get_currency():
+    # TODO: update this to a list of currencies ISO
     return "NGN"
 
 
@@ -69,7 +72,7 @@ class Event(BaseAbstractModel):
         default=0, verbose_name="How many people can register"
     )
     remaining_slots = models.IntegerField(default=0)
-    # TODO: find a way to capture location, maybe some geolocation stuffs
+    # event_location = LocationField(blank=True, null=True)
     def __str__(self):
         return self.name
 

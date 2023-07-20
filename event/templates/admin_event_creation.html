@@ -18,9 +18,9 @@
             Start date : <b> {{event_date | date:"F d, Y H:i:s"}}</b> <br/>
             Event type : <b> {{event_type}}</b> <br/>
             Location : <b> {{event_location}}</b> <br/>
-            Event URL : <a href="{{event_url}}" >{{event_url}}</a>  <br/>
+            Event URL : <code><a href="{{event_url}}">{{event_url}}</a> </code>  <br/>
             {% if event_address %}
-                Address : <b> {{evenet_address}}</b></br>
+                Address : <b> {{event_address}}</b></br>
             {% endif %}
         </p>
     </div>
