@@ -3,6 +3,8 @@ from django.db import transaction
 from django.db.models import F, Q
 from django.http import Http404
 
+from decouple import config
+
 from rest_framework import status
 from helpers.response import Response
 from helpers.permissions import IsAdminUser, IsUser
@@ -89,7 +91,7 @@ class EventService:
             "event_date": kwargs.get("start_date"),
             "event_type": kwargs.get("event_type"),
             "event_location": kwargs.get("location"),
-            "event_url": f"https://www.davent.come/event/{event_created.id}",
+            "event_url": f"{config('BASE_URL')}/event/{event_created.id}",
             "event_address": kwargs.get("address"),
             "rsvp": event_created.rsvp,
         }

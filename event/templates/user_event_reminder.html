@@ -5,7 +5,7 @@
     <h2>Hi {{first_name}}!</h2>
     <p>
         How's it going? You remembered when you registered for <b>{{event_name}}</b> right?
-        Yeah, we wanna let you know that the event is happening <b>{{event_day}}, {{event_date}}</b>, just to remind you.
+        Yeah, we wanna let you know that the event is happening <b>{{event_day}}</b>, just to remind you.
     </p>
 
     <p>See ya! 👍</p>
@@ -20,10 +20,10 @@
         Event type : <b> {{event_type}}</b> <br/>
         Location : <b> {{event_location}}</b> <br/>
         {% if event_url %}
-            Event URL : <a href="{{event_url}}" >{{event_url}}</a>  <br/>
+            Event URL : <a href="{{event_url}}" >CLICK</a>  <br/>
         {% endif %}
         {% if event_address %}
-            Address : {{evenet_address}}
+            Address : <b>{{event_address}}</b>
         {% endif %}
     </p>
 

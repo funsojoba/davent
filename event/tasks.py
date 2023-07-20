@@ -1,5 +1,6 @@
 from celery import shared_task
 from django.utils import timezone
+from decouple import config
 
 from datetime import timedelta
 
@@ -82,9 +83,6 @@ def user_event_reminder():
 
 
 def test_email_reminder(event_id):
-    import pdb
-
-    pdb.set_trace()
     days = {"1": "tomorrow", "7": "next week"}
     event = EventService.get_single_event(id=event_id)
     today = timezone.now()
@@ -99,7 +97,7 @@ def test_email_reminder(event_id):
             "event_date": event.start_date,
             "event_location": event.location,
             "event_type": event.event_type,
-            "event_url": event.event_url if event.event_url else None,
+            "event_url": f"{config('BASE_URL')}/event/{event.id}",
             "event_address": event.address if event.address else None,
             "rsvp": ", ".join(event.rsvp) if event.rsvp else None,
         }
