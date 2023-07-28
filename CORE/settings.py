@@ -15,6 +15,7 @@ import dj_database_url
 from pathlib import Path
 from decouple import config
 from datetime import timedelta
+from django.core.files.storage import FileSystemStorage
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -253,13 +254,14 @@ AWS_STORAGE_BUCKET_NAME = config("AWS_STORAGE_BUCKET_NAME")
 AWS_S3_FILE_OVERWRITE = False
 AWS_LOCATION = "static"
 AWS_DEFAULT_ACL = None
-DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+# DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
-STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+# STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'  # for static files from tutorial
+STATICFILES_STORAGE = 'django.core.files.storage.FileSystemStorage'
 AWS_DEFAULT_ACL = "public-read"
 # GEOIP_PATH = BASE_DIR / "geoip"
 # GDAL_LIBRARY_PATH = BASE_DIR / "gdal"

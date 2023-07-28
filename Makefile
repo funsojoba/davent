@@ -35,6 +35,9 @@ test:
 down:
 	$(COMPOSE) down
 
+collectstatic:
+	$(COMPOSE) exec $(SERVICE) python manage.py collectstatic
+
 migrate:
 	$(COMPOSE) exec $(SERVICE) python manage.py migrate
 
