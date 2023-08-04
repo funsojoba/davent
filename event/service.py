@@ -386,7 +386,6 @@ class TicketService:
     @classmethod
     def get_ticket(cls, user, event_id):
         event = EventService.get_single_event(id=event_id)
-        # ticket = Ticket.objects.filter(owner=user, event=event).first()
         return get_object_or_404(Ticket, owner=user, event=event)
 
     @classmethod

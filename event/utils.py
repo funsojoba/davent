@@ -4,13 +4,15 @@ import uuid
 import pdfkit
 from django.conf import settings
 from django.shortcuts import render
+from django.http import HttpResponse
 from django.http import FileResponse
-from reportlab.pdfgen import canvas
-
-from event.service import EventService
-from helpers.event_ticket import download_as_pdf_view
-
 from django.template.loader import render_to_string
+
+from helpers.event_ticket import download_as_pdf_view
+from event.service import EventService
+
+from xhtml2pdf import pisa 
+
 
 def generate_pdf(context):
     
@@ -22,7 +24,7 @@ def generate_pdf(context):
 
     html = render_to_string(template_path, context)
 
-    pisaStatus = pisa.CreatePDF(_html, dest=response, getSize=100)
+    pisaStatus = pisa.CreatePDF(html, dest=response, getSize=100)
     return response 
 
 

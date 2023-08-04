@@ -170,6 +170,7 @@ class UodateEventSerializer(serializers.Serializer):
 
 
 class TicketSerializer(serializers.ModelSerializer):
+    id = serializers.CharField(read_only=True)
     owner = UserSerializer()
     event = serializers.SerializerMethodField()
 
@@ -190,7 +191,7 @@ class TicketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ticket
-        fields = ("get_status", "ticket_id", "expiry_date", "event", "owner")
+        fields = ('id', "get_status", "ticket_id", "expiry_date", "event", "owner")
 
 
 class SendEmailSerializer(serializers.Serializer):

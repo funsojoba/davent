@@ -35,7 +35,6 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.template.loader import get_template
-from weasyprint import HTML
 
 import tempfile
 
@@ -115,6 +114,7 @@ class UserEventViewSet(viewsets.ViewSet):
         context["event_url"] = ticket_q.get("event").get("event_url")
         context["event_address"] = ticket_q.get("event").get("event_address")
         context["rsvp"] = ticket_q.get("event").get("rsvp")
+        context["base_url"] = settings.BASE_URL
        
         return generate_pdf(context=context)
 
