@@ -16,6 +16,8 @@ from helpers.permissions import IsAdminUser, IsUser
 from helpers.response import Response
 from helpers.validator import is_valid_date_format
 
+from event.utils import generate_pdf
+
 from .service import (
     EventService,
     EventCategoryService,
@@ -104,69 +106,17 @@ class UserEventViewSet(viewsets.ViewSet):
         ticket_q = serializers.TicketSerializer(service_response).data
         context = {}
 
-        # context["event_name"] = ticket_q.get("event").get("name")
-        # context["expiry_date"] = ticket_q.get("expiry_date")
-        # context["event_type"] = ticket_q.get("event").get("event_type")
-        # context["ticket_number"] = ticket_q.get("ticket_id")
-        # context["event_date"] = ticket_q.get("event").get("start_date")
-        # context["event_location"] = ticket_q.get("event").get("location")
-        # context["event_url"] = ticket_q.get("event").get("event_url")
-        # context["event_address"] = ticket_q.get("event").get("event_address")
-        # context["rsvp"] = ticket_q.get("event").get("rsvp")
-        """
-        "data": {
-            "get_status": "ACTIVE",
-            "ticket_id": "asPiKmAaHvY",
-            "expiry_date": "2023-06-17T00:18:09.610681Z",
-            "event": {
-                "id": "5878a128c5bb472ab2bd058a63ab88c0",
-                "name": "Guiness World Record",
-                "start_date": "2023-06-17T00:18:09.610681Z",
-                "end_date": "2023-06-09T00:18:09.610681Z",
-                "event_type": "FREE",
-                "status": "ACTIVE",
-                "location": "ONSITE",
-                "currency": "NGN",
-                "amount": 0.0
-            },
-            "owner": {
-                "first_name": "Dotun",
-                "last_name": "Arofolo",
-                "email": "dotun.arofolo@gmail.com",
-                "phone_number": "+234798276362",
-                "city": "lekki",
-                "state": "lagos",
-                "country": "Nigeria",
-                "user_type": "USER",
-                "avatar": ""
-            }
-        }
-        """
-        # pdf_file = download_as_pdf_view(
-        #     context=context, template_path="ticket_pdf.html"
-        # )
-        # response = HttpResponse(result.getvalue(), content_type="application/pdf")
-        # response["Content-Disposition"] = 'attachment; filename="ticket.pdf"'
-        # return response
-        # rendered_html = render_to_string("ticket_pdf.html", context=context)
-
-        # # Create a PDF object using WeasyPrint
-        # pdf = HTML(string=rendered_html).write_pdf()
-
-        # # Create an HTTP response with the PDF file
-        # response = HttpResponse(pdf, content_type="application/pdf")
-        # response["Content-Disposition"] = (
-        #     "filename=" + context["ticket_number"] + '"_ticket.pdf"'
-        # )
-        # response["Content-Transfer-Encoding"] = "binary"
-
-        # with tempfile.NamedTemporaryFile(dele=True) as output:
-        #     output.write(pdf)
-        #     output.flush()
-        #     output = open(output.name, "rb")
-        #     response.write(output.read())
-        # return response
-        return Response(data={"teting": "testing"})
+        context["event_name"] = ticket_q.get("event").get("name")
+        context["expiry_date"] = ticket_q.get("expiry_date")
+        context["event_type"] = ticket_q.get("event").get("event_type")
+        context["ticket_number"] = ticket_q.get("ticket_id")
+        context["event_date"] = ticket_q.get("event").get("start_date")
+        context["event_location"] = ticket_q.get("event").get("location")
+        context["event_url"] = ticket_q.get("event").get("event_url")
+        context["event_address"] = ticket_q.get("event").get("event_address")
+        context["rsvp"] = ticket_q.get("event").get("rsvp")
+       
+        return generate_pdf(context=context)
 
     @swagger_auto_schema(
         operation_description="Get user registered events",

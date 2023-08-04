@@ -10,6 +10,7 @@ from helpers.response import Response
 from helpers.permissions import IsAdminUser, IsUser
 from helpers.random_string import random_string
 from helpers.exception import CustomApiException
+from helpers.db_helper import get_object_or_404
 
 from .models import Event, EventCategory, Ticket, CheckIn
 from . import serializers
@@ -150,7 +151,7 @@ class EventService:
             "participant_city": user.city,
             "participant_state": user.state,
             "event_url": f"https://www.davent.com/event/{event.id}",
-            "ticket_link": "https://www.davent.com/event/1e832oise",
+            "ticket_link": "https://www.davent.com/event/1e832oise", #TODO: fix this
             "rsvp": ", ".join(event.rsvp) if event.rsvp else None,
         }
 
@@ -385,7 +386,8 @@ class TicketService:
     @classmethod
     def get_ticket(cls, user, event_id):
         event = EventService.get_single_event(id=event_id)
-        return Ticket.objects.filter(owner=user, event=event).first()
+        # ticket = Ticket.objects.filter(owner=user, event=event).first()
+        return get_object_or_404(Ticket, owner=user, event=event)
 
     @classmethod
     def list_tickets(cls, **kwargs):

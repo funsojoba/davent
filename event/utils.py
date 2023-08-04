@@ -10,30 +10,25 @@ from reportlab.pdfgen import canvas
 from event.service import EventService
 from helpers.event_ticket import download_as_pdf_view
 
-
-# Create your views here.
-# @staff_member_required
-# def generatePDF(request, id):
 from django.template.loader import render_to_string
 
-def generate_pdf(request):
-    # 1f5c069def2a41cf97eeeee5211e3e94
-    report = EventService.get_single_event(id="1f5c069def2a41cf97eeeee5211e3e94")
-    # report = Brand.objects.all()
+def generate_pdf(context):
+    
     template_path = 'ticket_pdf.html'
 
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="Report.pdf"'
+    file_name = f"{uuid.uuid4().hex}.pdf"
+    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
 
-    html = render_to_string(template_path, {'report': report})
+    html = render_to_string(template_path, context)
 
-    pisaStatus = pisa.CreatePDF(html, dest=response)
-
+    pisaStatus = pisa.CreatePDF(_html, dest=response, getSize=100)
     return response 
 
 
 
 
+#NOTE: Not working
 def download_as_pdf_view(context, template_path):
     # create PDF from HTML template file with context.
     # invoice = Invoice.objects.get(pk=pk)

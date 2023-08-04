@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from django.http import Http404
 
 
 def generate_id():
@@ -48,3 +49,11 @@ class BaseAbstractModel(models.Model):
         if not self.pk:
             self.created_by = actor
         super(BaseAbstractModel, self).save(*args, **kwargs)
+
+
+
+def get_object_or_404(model, **kwargs):
+    instance = model.objects.filter(**kwargs).first()
+    if instance:
+        return instance
+    raise Http404
