@@ -8,95 +8,87 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <title>Document</title>
     <style>
-        *{
-            font-family: sans-serif;
-            box-sizing: border-box;
-            padding:0;
-            margin:0;
-        }
-        @font-face {
-            font-family: sans-serif;
-            }
-
-        body {
-            background-color: #EFF3FB;
-        }
-        .container {
-            padding: 20px;
-            background: #fff;
-            max-width: 650px;
-            margin: auto;
-        }
+        *{font-family: sans-serif;box-sizing: border-box;padding:0;margin:0;}
+        @font-face {font-family: sans-serif;}
+        body {background-color: #EFF3FB;}
+        .container {padding: 20px;background: #fff;max-width: 650px;margin: auto;}
         .container .header{
             display:flex;
             justify-content:center;
             align-items:center;
-            background: url("https://res.cloudinary.com/ddl2pf4qh/image/upload/v1685828058/davent/BG_White_ojilrh.jpg");
-            background-size:cover;
-            margin-bottom:40px;
+            background: url("https://res.cloudinary.com/ddl2pf4qh/image/upload/v1685828058/davent/BG_White_ojilrh.jpg");background-size:cover;margin-bottom:40px;
+            }
+        table{width:100%;margin-bottom:30px;}
+        thead{background: #F2F2F2}
+        table td{
+            padding: 10px; 
+            font-size:1.5em;
+            border: solid 1px #fff;
+            }
+        table tr{
+            background: #fff;
         }
-        table{
-            width:100%;
-            margin-bottom:30px;
-        }
-        table thead{
+        .bg{
             background: #F2F2F2;
         }
-        table td{
-            padding: 10px;
-        }
-
         .title{
             display:flex;
             justify-content:center;
-            align-items:center;
-            padding:15px;
-        }
+            align-items:center;padding:15px;}
         h1{
             display:inline-block;
             text-align:center;
-        }
-        .image{
-            width:150px;
-        }
-        img{
-            width:100%
-        }
+            font-size:50px}
+        .image{width:150px;}
+        img{width:100%}
         .info p{
             line-height:1.5em;
-        }
+            font-size:1.5em;
+            }
         .footer{
-            background: #F2F2F2;
             padding:15px;
             display:flex;
             justify-content:space-between;
-            margin-top:50px;
-        }
+            margin-top:50px;}
         .footer .image{
             width:30px;
-        }
+            }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <div class="image">
-                <img src="https://res.cloudinary.com/ddl2pf4qh/image/upload/v1685828055/davent/logo_dark_uq5nzj.png" alt="Davent Logo">
-            </div>
+            <table>
+                <tr>
+                    <td>.</td>
+                    <td class="image">
+                        <img src="https://res.cloudinary.com/ddl2pf4qh/image/upload/v1685828055/davent/logo_dark_uq5nzj.png" alt="Davent Logo">
+                    </td>
+                    <td>.</td>
+                </tr>
+            </table>
         </div>
         <div class="title">
-            <h1>{{event_name}}</h1>
+            <table>
+                <tr>
+                    <td>.</td>
+                    <td>
+                        <h1>{{event_name}}</h1>
+                    </td>
+                    <td>.</td>
+                </tr>
+            </table>
         </div>
         <br>
 
         <table style="font-family: sans-serif;">
-            <thead>
+            <thead class="bg">
                 <td>Exp. Date</td>
                 <td>Event Type</td>
                 <td>Ticket No.</td>
             </thead>
             <tbody class="table-body">
-                <tr>
+                <tr class="bg">
                   <td><b>{{expiry_date | date:"F d, Y H:i:s"}}</b></td>
                   <td><b>{{event_type}}</b></td>
                   <td><b>{{ticket_number}}</b></td>
@@ -119,15 +111,15 @@
                     <p>RSVP : <b>{{rsvp}} </p>
                 {% endif %}
         </div>
+        
+        <hr>
         <div class="footer">
             <div class="image">
-                <img src="https://res.cloudinary.com/ddl2pf4qh/image/upload/v1685833419/davent/Logo_D_gti4fc.png"/>
-            </div>
-            <div class="footer-text">
-                <a href="{{base_url}}">davent.com</a>
+                <a href="{{base_url}}">
+                    <img src="https://res.cloudinary.com/ddl2pf4qh/image/upload/v1685833419/davent/Logo_D_gti4fc.png"/>
+                </a>
             </div>
         </div>
     </div>
-
 </body>
 </html>

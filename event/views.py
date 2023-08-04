@@ -1,3 +1,6 @@
+import os
+import uuid
+from django.conf import settings
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
@@ -27,6 +30,7 @@ from helpers.event_ticket import download_as_pdf_view
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template.loader import render_to_string
+from django.template.loader import get_template
 from weasyprint import HTML
 
 import tempfile
@@ -197,6 +201,7 @@ class AdminEventViewSet(viewsets.ViewSet):
         operation_description="Create Event",
         operation_summary="Create Event",
         tags=["Event-Admin"],
+        request_body=serializers.CreateEventSerializer
     )
     def create(self, request):
         serializer = serializers.CreateEventSerializer(data=request.data)
@@ -236,6 +241,7 @@ class AdminEventViewSet(viewsets.ViewSet):
         operation_description="Admin registers users for an event",
         operation_summary="Admin registers users for an event",
         tags=["Event-Admin"],
+        request_body=serializers.AdminRegisterUserSerializer
     )
     @action(
         detail=False, methods=["post"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/register-users"
@@ -258,6 +264,7 @@ class AdminEventViewSet(viewsets.ViewSet):
         operation_description="Set event status",
         operation_summary="Set event status",
         tags=["Event-Admin"],
+        request_body=serializers.AdminSetEventStatusSerializer
     )
     @action(detail=False, methods=["post"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/status")
     def set_event_status(self, request, pk):
@@ -279,6 +286,7 @@ class AdminEventViewSet(viewsets.ViewSet):
         operation_description="Update event",
         operation_summary="Update event",
         tags=["Event-Admin"],
+        request_body=serializers.UodateEventSerializer
     )
     def partial_update(self, request, pk=None):
         serializer = serializers.UodateEventSerializer(data=request.data)
@@ -309,6 +317,7 @@ class AdminEventViewSet(viewsets.ViewSet):
         operation_description="Admin send email to users",
         operation_summary="Admin send email to users",
         tags=["Event-Admin"],
+        request_body=serializers.SendEmailSerializer
     )
     @action(
         detail=False, methods=["post"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/send-email"
@@ -336,6 +345,7 @@ class AdminEventViewSet(viewsets.ViewSet):
         operation_description="Check in users",
         operation_summary="Check in users",
         tags=["Event"],
+        request_body=serializers.CheckInSerializer
     )
     @action(detail=False, methods=["POST"], url_path="(?P<pk>[a-z,A-Z,0-9]+)/check-in")
     def check_in_user(self, request, pk):
@@ -390,6 +400,7 @@ class EventCategoryViewSet(viewsets.ViewSet):
         operation_description="Create Event Category",
         operation_summary="Create Event Category",
         tags=["Event Category"],
+        request_body=serializers.EventCategorySerializer
     )
     def create(self, request):
         serializer = serializers.EventCategorySerializer(data=request.data)
@@ -478,17 +489,19 @@ def generate_pdf_2(request):
         "event_address": event.address,
         "rsvp": event.rsvp
     }
-    """
+    
 
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="Report.pdf"'
+    file_name = f"{uuid.uuid4().hex}.pdf"
+    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
 
-    html = render_to_string(template_path, report)
+    _html = render_to_string(template_path, report)
 
-    pisaStatus = pisa.CreatePDF(html, dest=response, getSize=100)
+    pisaStatus = pisa.CreatePDF(_html, dest=response, getSize=100)
+    # pisaStatus = pisa.CreatePDF(html, dest=response, getSize=100)
 
-    return response """
+    return response
 
-    from event.utils import download_as_pdf_view
-    return download_as_pdf_view(report, template_path)
+    # from event.utils import download_as_pdf_view
+    # return download_as_pdf_view(report, template_path)
 

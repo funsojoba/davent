@@ -26,7 +26,6 @@ def generate_pdf(request):
     response['Content-Disposition'] = 'attachment; filename="Report.pdf"'
 
     html = render_to_string(template_path, {'report': report})
-    print (html)
 
     pisaStatus = pisa.CreatePDF(html, dest=response)
 
