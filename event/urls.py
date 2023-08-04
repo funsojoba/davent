@@ -5,7 +5,7 @@ from .views import (
     EventCategoryViewSet,
     AdminEventViewSet,
 )
-from .views import view_template, generate_pdf
+from .views import view_template
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter(trailing_slash=False)
@@ -19,7 +19,6 @@ urlpatterns = router.urls
 
 template_path = [
     path("template", view_template, name="template"),
-    path("pdf", generate_pdf, name="generate_pdf")
 ]
 
 urlpatterns + template_path

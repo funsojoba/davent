@@ -9,6 +9,8 @@ from django.db.models import Q
 from django.utils import timezone
 from datetime import timedelta
 
+from xhtml2pdf import pisa 
+
 
 from helpers.permissions import IsAdminUser, IsUser
 from helpers.response import Response
@@ -445,35 +447,6 @@ def view_template(request):
     return render(request, template_name="ticket_pdf.html", context=context)
 
 
-def generate_pdf(request):
-    # Render the template to HTML
-    context = {
-        "event_name": "Lion of Juda",
-        "event_date": timezone.now() + timedelta(days=7),
-        "expiry_date": timezone.now() + timedelta(days=7),
-        "ticket_number": "12uiu39",
-        "organization_name": "Davent Org.",
-        "event_type": "FREE",
-        "event_location": "ONSITE",
-        "event_address": "VI Event Center",
-        "event_url": f"https://www.davent.com/event/1e832oise",
-        "ticket_link": "https://www.davent.com/event/1e832oise",
-        "rsvp": ", ".join(["+1 (234) 345 33", "+23458392034"]),
-    }
-    rendered_html = render_to_string("ticket_pdf.html", context)
-
-    # Create a PDF object using WeasyPrint
-    pdf = HTML(string=rendered_html).write_pdf()
-
-    # Create an HTTP response with the PDF file
-    response = HttpResponse(pdf, content_type="application/pdf")
-    response["Content-Disposition"] = 'filename="your_pdf_file.pdf"'
-    return response
-
-
-from xhtml2pdf import pisa 
-
-
 def generate_pdf_2(request):
     event = EventService.get_single_event(id="1f5c069def2a41cf97eeeee5211e3e94")
     template_path = 'ticket_pdf.html'
@@ -482,7 +455,7 @@ def generate_pdf_2(request):
         "event_name": event.name,
         "expiry_date": event.end_date,
         "event_type": event.event_type,
-        "ticket_number": "asdf",
+        "ticket_number": uuid.uuid4().hex[:8].upper(),
         "event_date": event.start_date,
         "event_location": event.location,
         "event_url": event.event_url,
@@ -490,7 +463,6 @@ def generate_pdf_2(request):
         "rsvp": event.rsvp
     }
     
-
     response = HttpResponse(content_type='application/pdf')
     file_name = f"{uuid.uuid4().hex}.pdf"
     response['Content-Disposition'] = f'attachment; filename="{file_name}"'
@@ -501,7 +473,3 @@ def generate_pdf_2(request):
     # pisaStatus = pisa.CreatePDF(html, dest=response, getSize=100)
 
     return response
-
-    # from event.utils import download_as_pdf_view
-    # return download_as_pdf_view(report, template_path)
-
