@@ -17,6 +17,9 @@ router.register(r"category", EventCategoryViewSet, basename="event-category")
 urlpatterns = router.urls
 
 
-template_path = [path("template", view_template, name="template")]
+template_path = [
+    path("template", view_template, name="template"),
+    path("pdf", generate_pdf, name="generate_pdf")
+]
 
 urlpatterns + template_path

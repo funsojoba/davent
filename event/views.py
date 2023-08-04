@@ -458,3 +458,37 @@ def generate_pdf(request):
     response = HttpResponse(pdf, content_type="application/pdf")
     response["Content-Disposition"] = 'filename="your_pdf_file.pdf"'
     return response
+
+
+from xhtml2pdf import pisa 
+
+
+def generate_pdf_2(request):
+    event = EventService.get_single_event(id="1f5c069def2a41cf97eeeee5211e3e94")
+    template_path = 'ticket_pdf.html'
+
+    report = {
+        "event_name": event.name,
+        "expiry_date": event.end_date,
+        "event_type": event.event_type,
+        "ticket_number": "asdf",
+        "event_date": event.start_date,
+        "event_location": event.location,
+        "event_url": event.event_url,
+        "event_address": event.address,
+        "rsvp": event.rsvp
+    }
+    """
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="Report.pdf"'
+
+    html = render_to_string(template_path, report)
+
+    pisaStatus = pisa.CreatePDF(html, dest=response, getSize=100)
+
+    return response """
+
+    from event.utils import download_as_pdf_view
+    return download_as_pdf_view(report, template_path)
+
