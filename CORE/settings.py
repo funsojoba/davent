@@ -234,8 +234,8 @@ EMAIL_VERIFICATION_URL = config("EMAIL_VERIFICATION_URL", default="")
 CORS_ALLOW_ALL_ORIGINS = True
 
 CELERY_ACCEPT_CONTENT = ["application/json"]
-CELERY_TASK_SERIALIZER = "json"
-CELERY_RESULT_SERIALIZER = "json"
+# CELERY_TASK_SERIALIZER = "json"
+# CELERY_RESULT_SERIALIZER = "json"
 CELERY_BROKER_URL = config("REDIS_URL", default="redis://redis:6379/0")
 CELERY_MAX_RETRY = ""
 CELERY_RETRY_DELAY = ""
@@ -264,4 +264,4 @@ STATICFILES_DIRS = [
 STATICFILES_STORAGE = 'django.core.files.storage.FileSystemStorage'
 AWS_DEFAULT_ACL = "public-read"
 # GEOIP_PATH = BASE_DIR / "geoip"
-# GDAL_LIBRARY_PATH = BASE_DIR / "gdal"
+
