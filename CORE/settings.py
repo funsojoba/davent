@@ -112,11 +112,11 @@ DATABASE_URL = config(
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": config("POSTGRES_DBNAME", "postgres"),
-        "USER": config("POSTGRES_USER", "postgres"),
-        "PASSWORD": config("POSTGRES_PASS", "postgres"),
-        "HOST": config("PG_HOST", "postgres"),
-        "PORT": config("PG_PORT", "5432"),
+        "NAME": config("POSTGRES_DBNAME"),
+        "USER": config("POSTGRES_USER"),
+        "PASSWORD": config("POSTGRES_PASS"),
+        "HOST": config("PG_HOST"),
+        "PORT": config("PG_PORT"),
     }
 }
 
