@@ -31,4 +31,9 @@ touch .env - to create an env file
 make build - this builds your Docker image
 make up - this should start your project
 ```
+
+the app should run on `http://localhost:8000`
+visit `http://0.0.0.0:8000/docs/` for documentation
+
+
 You might want to configure your `.env` file to suit your prefered configuration, the required `.env` values are provided in the `.env.example` file
