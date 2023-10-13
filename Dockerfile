@@ -7,10 +7,8 @@ ENV PYTHONUNBUFFERED 1
 COPY ./requirements.txt .
 
 RUN apt-get update && apt-get install -y \
-    gcc python-dev libpq-dev postgresql-client wkhtmltopdf wget python3-cffi python3-brotli \
-    libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0 --no-install-recommends \
-    binutils libproj-dev libgdal-dev && \
-    apt-get clean
+    gcc python-dev libpq-dev postgresql-client wkhtmltopdf wget --no-install-recommends \
+    python3-gdal
 
 RUN pip install --upgrade pip && pip install -r requirements.txt
 

@@ -50,6 +50,7 @@ pydantic
 pymongo
 pytesseract
 pytest
+pytest-django
 python-dotenv
 python-multipart
 pytz
@@ -92,5 +93,5 @@ weasyprint
 django-weasyprint
 xhtml2pdf
 django-xhtml2pdf
-geoip2
+# geoip2
 django-location-field

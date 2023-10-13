@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django.contrib.gis",
+    # "django.contrib.gis",
     # installed app
     "storages",
     "drf_yasg",
@@ -62,7 +62,7 @@ INSTALLED_APPS = [
     "organization",
     "event",
     "payment",
-    "geoip2",
+    # "geoip2",
 ]
 
 MIDDLEWARE = [
@@ -148,7 +148,7 @@ TIME_ZONE = "UTC"
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -264,4 +264,5 @@ STATICFILES_DIRS = [
 STATICFILES_STORAGE = 'django.core.files.storage.FileSystemStorage'
 AWS_DEFAULT_ACL = "public-read"
 # GEOIP_PATH = BASE_DIR / "geoip"
-
+# GDAL_LIBRARY_PATH =   "/usr/lib/ogdi/libgdal.so"
+GDAL_LIBRARY_PATH = "/usr/lib/libgdal.so.20" 
