@@ -244,8 +244,8 @@ ENVIRONMENT = config("ENVIRONMENT", default="dev")
 
 BASE_URL = config("BASE_URL", default="davent.com")
 
-PAYSTACK_SECRET_KEY = config("PAYSTACK_SECRET_KEY")
-PAYSTACK_URL = config("PAYSTACK_URL")
+PAYSTACK_SECRET_KEY = config("PAYSTACK_SECRET_KEY", "randomstring")
+PAYSTACK_URL = config("PAYSTACK_URL", "https://api.paystack.co")
 
 
 AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
