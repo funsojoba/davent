@@ -1,5 +1,4 @@
 import pytest
-from django.urls import reverse
 from rest_framework import status
 from django.test import TestCase
 from authentication.models import User
@@ -7,7 +6,7 @@ from authentication.models import User
 from rest_framework.test import APIClient
 
 
-#import unittest
+
 client = APIClient()
 
 
@@ -57,7 +56,6 @@ class TestAuthentication(TestCase):
         assert response.data['first_name'] == ['This field is required.']
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
-
     def test_user_login_success(self): 
         url = "/api/v1/auth/login"
         data = {
@@ -79,3 +77,6 @@ class TestAuthentication(TestCase):
         assert response.data['message'] == 'failure'
         assert response.data["errors"] == {'error': 'User does not exist'}
         assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def tearDown(self):
+        self.user.delete()
