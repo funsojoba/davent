@@ -20,13 +20,9 @@ jobs:
         with:
           python-version: 3.8
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-
       - name: Build Docker image
         run: |
-          make build
+          make up --build
 
       - name: Run tests
         run: |
