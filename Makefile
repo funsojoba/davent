@@ -30,7 +30,7 @@ shell:
 	$(COMPOSE) exec $(SERVICE) python manage.py shell
 
 test:
-	pytest
+	$(COMPOSE) exec $(SERVICE) python manage.py test
 
 down:
 	$(COMPOSE) down

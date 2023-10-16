@@ -46,7 +46,7 @@ class AuthViewSet(viewsets.ViewSet):
         tags=["Auth"],
         responses=schema_example.COMPLETE_REGISTRATION_RESPONSES,
     )
-    @action(detail=False, methods=["post"], url_path="signup")
+    @action(detail=False, methods=["post"], url_path="signup", url_name="user-signup")
     def user_signup(self, request):
         serializer = RegisterUserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -133,7 +133,7 @@ class AuthViewSet(viewsets.ViewSet):
         request_body=LoginUserSerializer,
     )
     @action(detail=False, methods=["post"], url_path="login")
-    def verify_forgot_password(self, request):
+    def login_user(self, request):
         serializer = LoginUserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         service_response = UserService.login_user(
