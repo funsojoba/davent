@@ -1,4 +1,6 @@
 import uuid
+
+from rest_framework import status
 from django.conf import settings
 from django.contrib.auth.hashers import check_password
 
@@ -181,7 +183,7 @@ class UserService:
                 "token": {"refresh": str(token), "access": str(token.access_token)},
             }
             return Response(data=data)
-        return Response(errors={"error": "User does not exist"})
+        return Response(errors={"error": "User does not exist"}, status=status.HTTP_400_BAD_REQUEST)
 
     @classmethod
     def get_all_users(cls, **kwargs):
