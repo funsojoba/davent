@@ -1,9 +1,11 @@
 import pytest
 from authentication.models import User
+# import django_db
 
 
 @pytest.fixture(scope="module")
-def user():
+@pytest.mark.django_db
+def user(db):
     user = User.objects.create(
 		first_name="John",
 		last_name="Doe",
@@ -16,9 +18,9 @@ def user():
     user.set_password("testpassword")
     return user
 
-
 @pytest.fixture(scope="module")
-def admin_user():
+@pytest.mark.django_db
+def admin_user(db):
     user = User.objects.create(
 		first_name="Admin",
 		last_name="User",
