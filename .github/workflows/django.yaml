@@ -22,7 +22,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          make up-build
+          make up-d
 
       - name: Run tests
         run: |

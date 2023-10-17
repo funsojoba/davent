@@ -11,8 +11,8 @@ up-build:
 build:
 	$(COMPOSE) build
 
-up-b:
-	$(COMPOSE) up -b
+up-d:
+	$(COMPOSE) up -d
 
 enter:
 	$(COMPOSE) exec $(SERVICE) bash
