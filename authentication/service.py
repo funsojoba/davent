@@ -68,7 +68,7 @@ class UserService:
 
     @classmethod
     def verify_signed_up_user(cls, email, otp):
-        cached_info = cache_info = CacheManager.retrieve_key(f"user:otp:{otp}")
+        cached_info = CacheManager.retrieve_key(f"user:otp:{otp}")
         if cache_info and cache_info.get("email") == email:
             cls.activate_user(email)
             CacheManager.delete_key(f"user:reset_password:{otp}")
